@@ -1,0 +1,27 @@
+# One-click deploy blueprint for Render (https://render.com).
+# In Render: New + -> Blueprint -> connect this repo. It reads this file,
+# then prompts for the three secret values below. See DEPLOY.md.
+services:
+  - type: web
+    name: productops-gtm
+    runtime: docker
+    plan: starter
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /api/health
+    envVars:
+      - key: JIRA_BASE_URL
+        sync: false # Render will prompt: e.g. https://papayaglobal.atlassian.net
+      - key: JIRA_EMAIL
+        sync: false # Render will prompt: the account that owns the API token
+      - key: JIRA_API_TOKEN
+        sync: false # Render will prompt: kept secret, never in the repo
+      - key: LABEL_PREFIX
+        value: Product
+      - key: EPICS_ONLY
+        value: "true"
+      - key: OVERLAY_FILE
+        value: /app/data/overlay.json
+    disk:
+      name: data
+      mountPath: /app/data # keeps the GTM overlay across redeploys
+      sizeGB: 1

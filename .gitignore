@@ -1,0 +1,26 @@
+# Dependencies
+node_modules/
+
+# Env / secrets
+.env
+.env.local
+*.local
+
+# Build output
+dist/
+client/dist/
+server/dist/
+
+# Runtime data (the JSON overlay store lives here)
+data/
+!data/.gitkeep
+
+# Logs
+*.log
+npm-debug.log*
+
+# Editor / OS
+.DS_Store
+.vscode/*
+!.vscode/extensions.json
+.idea/
