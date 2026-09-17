@@ -1,0 +1,23 @@
+{
+  "name": "productops-gtm",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Quarterly epic tracker connecting Jira to Product Operations & GTM, with a GTM overlay (t-shirt size, owners, onboarding readiness, AE/AM visibility).",
+  "workspaces": [
+    "server",
+    "client"
+  ],
+  "scripts": {
+    "dev": "concurrently -n server,client -c blue,magenta \"npm run dev -w server\" \"npm run dev -w client\"",
+    "build": "npm run build -w server && npm run build -w client",
+    "start": "npm run start -w server",
+    "lint": "npm run lint -w client",
+    "typecheck": "npm run typecheck -w server && npm run typecheck -w client"
+  },
+  "engines": {
+    "node": ">=18.18"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  }
+}
