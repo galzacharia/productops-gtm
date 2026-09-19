@@ -30,15 +30,23 @@ Switch the quarter/year in the header and the app pulls the matching label live.
 
 ## What you can do
 
-- **Monitor** every epic planned for a quarter, grouped and filterable by project,
-  status, and onboarding stage.
+- **Monitor** every epic planned for a quarter, split into **domain tabs**
+  (Payments / Contingent / EOR / Payroll / Other) so the list stays short.
+  Domains are auto-guessed from the Jira project + title and can be overridden
+  per epic.
 - **Track epic status** straight from Jira (To Do / In Progress / Done), plus PM,
   story points, executive status, target quarter and fix version.
 - **Know when to onboard** — any epic that is **Done in Jira** is flagged
-  **"Ready to onboard"** until GTM marks it Onboarding → Live.
-- **Assign Product Ops and GTM owners** per epic.
+  **"Ready to onboard"**.
+- **Rollout sign-off** — two checkboxes per epic (Product Ops done / GTM done).
+  When both are ticked the epic is **Rolled out** and drops out of the active
+  list into a "Rolled out" view.
+- **Hide the noise** — mark an epic **"Not relevant for rollout"** and it
+  disappears from the active list (still available under the "Not relevant" view).
+- **Assign Product Ops and GTM owners** per epic (from managed dropdowns).
 - **Set a t-shirt size** and **GTM labels** per epic.
 - **Give AE/AM visibility** — flag epics as visible to AE/AM and attach notes for them.
+- **Views**: Active (default) · Rolled out · Not relevant · All.
 - **Export** the current (filtered) view to CSV.
 
 Jira is **read-only**; the GTM overlay is stored app-side (see below). The Jira client

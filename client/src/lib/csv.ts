@@ -1,5 +1,6 @@
 import type { EpicRow } from "../types";
 import { signalMeta } from "./onboarding";
+import { domainOf } from "./domain";
 
 function esc(v: unknown): string {
   const s = v == null ? "" : String(v);
@@ -10,15 +11,16 @@ export function rowsToCsv(rows: EpicRow[]): string {
   const headers = [
     "Epic",
     "Summary",
+    "Domain",
     "Project",
     "Jira Status",
     "Onboarding",
     "T-shirt",
     "Product Ops Owner",
     "GTM Owner",
-    "Onboarding Status",
-    "Product Manager",
-    "Story Points",
+    "Product Ops Done",
+    "GTM Done",
+    "Not Relevant",
     "AE/AM Visible",
     "Jira Labels",
     "GTM Labels",
@@ -29,15 +31,16 @@ export function rowsToCsv(rows: EpicRow[]): string {
     return [
       r.key,
       r.summary,
+      domainOf(r),
       r.project,
       r.status,
       signalMeta(r).label,
       o.tshirtSize ?? "",
       o.productOpsOwner ?? "",
       o.gtmOwner ?? "",
-      o.onboardingStatus ?? "",
-      r.productManager ?? "",
-      r.storyPoints ?? "",
+      o.productOpsDone ? "Yes" : "No",
+      o.gtmDone ? "Yes" : "No",
+      o.notRelevantForRollout ? "Yes" : "No",
       o.gtmVisible ? "Yes" : "No",
       r.labels.join(" "),
       (o.gtmLabels ?? []).join(" "),

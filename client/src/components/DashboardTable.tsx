@@ -1,10 +1,10 @@
-import { ExternalLink, Eye, EyeOff } from "lucide-react";
+import { Ban, ExternalLink, Eye, EyeOff } from "lucide-react";
 import clsx from "clsx";
 import type { EpicOverlay, EpicRow } from "../types";
-import { signalMeta, statusCategoryClass } from "../lib/onboarding";
-import { TSHIRT_SIZES, ONBOARDING_STATUSES, tshirtClass } from "../lib/options";
+import { isExcluded, signalMeta, statusCategoryClass } from "../lib/onboarding";
+import { domainOf } from "../lib/domain";
+import { TSHIRT_SIZES, PRODUCT_OPS_OWNERS, GTM_OWNERS, tshirtClass } from "../lib/options";
 import { Badge, InlineSelect } from "./ui";
-import { EditableText } from "./EditableText";
 
 type SaveFn = (epicKey: string, patch: Partial<EpicOverlay>) => void;
 
@@ -24,7 +24,7 @@ export function DashboardTable({
   if (rows.length === 0) {
     return (
       <div className="rounded-xl border border-dashed border-slate-300 bg-white py-16 text-center text-slate-500">
-        No epics match the current quarter and filters.
+        No epics here. Try another domain tab or view.
       </div>
     );
   }
@@ -35,24 +35,24 @@ export function DashboardTable({
         <thead className="border-b border-slate-200 bg-slate-50">
           <tr>
             <th className={TH}>Epic</th>
-            <th className={TH}>Project</th>
             <th className={TH}>Jira status</th>
             <th className={TH}>Onboarding</th>
             <th className={clsx(TH, "w-24")}>T-shirt</th>
             <th className={clsx(TH, "w-40")}>Product Ops</th>
             <th className={clsx(TH, "w-40")}>GTM owner</th>
-            <th className={clsx(TH, "w-44")}>Onboarding status</th>
-            <th className={TH}>PM</th>
-            <th className={clsx(TH, "text-right")}>SP</th>
+            <th className={TH}>Rollout sign-off</th>
             <th className={clsx(TH, "text-center")}>AE/AM</th>
+            <th className={TH}></th>
           </tr>
         </thead>
         <tbody className="divide-y divide-slate-100">
           {rows.map((row) => {
             const meta = signalMeta(row);
             const o = row.overlay;
+            const ex = isExcluded(row);
+            const both = o.productOpsDone && o.gtmDone;
             return (
-              <tr key={row.key} className="hover:bg-slate-50/70">
+              <tr key={row.key} className={clsx("hover:bg-slate-50/70", ex && "opacity-60")}>
                 <td className={clsx(TD, "min-w-[260px] max-w-[380px]")}>
                   <div className="flex items-center gap-1.5">
                     <a
@@ -81,9 +81,12 @@ export function DashboardTable({
                   >
                     {row.summary}
                   </button>
+                  <span className="mt-1 block text-[10px] font-bold uppercase tracking-wide text-slate-400">
+                    {domainOf(row)}
+                  </span>
                   {(row.labels.length > 0 || (o.gtmLabels?.length ?? 0) > 0) && (
                     <div className="mt-1 flex flex-wrap gap-1">
-                      {row.labels.slice(0, 4).map((l) => (
+                      {row.labels.slice(0, 3).map((l) => (
                         <Badge key={l} className="bg-slate-100 text-slate-500">
                           {l}
                         </Badge>
@@ -95,10 +98,6 @@ export function DashboardTable({
                       ))}
                     </div>
                   )}
-                </td>
-
-                <td className={clsx(TD, "text-slate-600 whitespace-nowrap")}>
-                  {row.project}
                 </td>
 
                 <td className={TD}>
@@ -123,40 +122,47 @@ export function DashboardTable({
                 </td>
 
                 <td className={TD}>
-                  <EditableText
+                  <InlineSelect
                     value={o.productOpsOwner ?? ""}
+                    options={PRODUCT_OPS_OWNERS}
                     placeholder="Assign…"
-                    onCommit={(v) => onSave(row.key, { productOpsOwner: v })}
-                  />
-                </td>
-
-                <td className={TD}>
-                  <EditableText
-                    value={o.gtmOwner ?? ""}
-                    placeholder="Assign…"
-                    onCommit={(v) => onSave(row.key, { gtmOwner: v })}
+                    onChange={(v) => onSave(row.key, { productOpsOwner: v })}
                   />
                 </td>
 
                 <td className={TD}>
                   <InlineSelect
-                    value={o.onboardingStatus ?? ""}
-                    options={ONBOARDING_STATUSES}
-                    placeholder="Auto (from Jira)"
-                    onChange={(v) =>
-                      onSave(row.key, {
-                        onboardingStatus: v as EpicOverlay["onboardingStatus"],
-                      })
-                    }
+                    value={o.gtmOwner ?? ""}
+                    options={GTM_OWNERS}
+                    placeholder="Assign…"
+                    onChange={(v) => onSave(row.key, { gtmOwner: v })}
                   />
                 </td>
 
-                <td className={clsx(TD, "text-slate-600 whitespace-nowrap")}>
-                  {row.productManager ?? row.pmOwner ?? "—"}
-                </td>
-
-                <td className={clsx(TD, "text-right text-slate-600")}>
-                  {row.storyPoints ?? "—"}
+                <td className={TD}>
+                  <div className="flex flex-col gap-1">
+                    <label className="flex items-center gap-1.5 whitespace-nowrap text-xs text-slate-600">
+                      <input
+                        type="checkbox"
+                        className="accent-brand"
+                        checked={!!o.productOpsDone}
+                        onChange={(e) => onSave(row.key, { productOpsDone: e.target.checked })}
+                      />
+                      Product Ops
+                    </label>
+                    <label className="flex items-center gap-1.5 whitespace-nowrap text-xs text-slate-600">
+                      <input
+                        type="checkbox"
+                        className="accent-brand"
+                        checked={!!o.gtmDone}
+                        onChange={(e) => onSave(row.key, { gtmDone: e.target.checked })}
+                      />
+                      GTM
+                    </label>
+                    {both && (
+                      <span className="text-[11px] font-bold text-emerald-700">✓ Rolled out</span>
+                    )}
+                  </div>
                 </td>
 
                 <td className={clsx(TD, "text-center")}>
@@ -171,6 +177,19 @@ export function DashboardTable({
                     )}
                   >
                     {o.gtmVisible ? <Eye size={16} /> : <EyeOff size={16} />}
+                  </button>
+                </td>
+
+                <td className={clsx(TD, "text-center")}>
+                  <button
+                    onClick={() => onSave(row.key, { notRelevantForRollout: !ex })}
+                    title={ex ? "Marked not relevant — click to restore" : "Mark not relevant for rollout"}
+                    className={clsx(
+                      "inline-flex rounded-md p-1.5",
+                      ex ? "text-rose-600 hover:bg-rose-50" : "text-slate-300 hover:bg-slate-100",
+                    )}
+                  >
+                    <Ban size={15} />
                   </button>
                 </td>
               </tr>
