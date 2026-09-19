@@ -1,4 +1,4 @@
-import type { OnboardingStatus, TshirtSize } from "../types";
+import type { Domain, TshirtSize } from "../types";
 
 export const TSHIRT_SIZES: Exclude<TshirtSize, "">[] = [
   "XS",
@@ -9,12 +9,27 @@ export const TSHIRT_SIZES: Exclude<TshirtSize, "">[] = [
   "XXL",
 ];
 
-export const ONBOARDING_STATUSES: Exclude<OnboardingStatus, "">[] = [
-  "Not Started",
-  "Ready to Onboard",
-  "Onboarding",
-  "Live",
-  "Blocked",
+/** Product domains for grouping epics (Jira projects don't map 1:1). */
+export const DOMAINS: Domain[] = ["Payments", "Contingent", "EOR", "Payroll", "Other"];
+
+/** Assignable Product Ops owners. */
+export const PRODUCT_OPS_OWNERS = [
+  "Orit Neeman",
+  "Tom Arad",
+  "Golan Lavan",
+  "Gal Zacharia",
+];
+
+/** Assignable GTM owners. */
+export const GTM_OWNERS = [
+  "Elad Ben David",
+  "Shai Beres",
+  "Jessica Ruyburn",
+  "Eric Weaver",
+  "Sarah Ilan",
+  "Ina Koporcic",
+  "Sivanne Fishel",
+  "Zara Meller",
 ];
 
 export function tshirtClass(size?: TshirtSize): string {

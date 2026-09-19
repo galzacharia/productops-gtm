@@ -28,17 +28,16 @@ export interface JiraEpic {
 /** App-side overlay — the GTM / Product Ops data Jira does not hold. */
 export interface EpicOverlay {
   epicKey: string;
+  /** Product domain: Payments | Contingent | EOR | Payroll | Other. Empty = auto-guess from Jira. */
+  domain?: string;
   tshirtSize?: "XS" | "S" | "M" | "L" | "XL" | "XXL" | "";
   productOpsOwner?: string;
   gtmOwner?: string;
-  /** GTM onboarding lifecycle tracked by Product Ops / GTM. */
-  onboardingStatus?:
-    | "Not Started"
-    | "Ready to Onboard"
-    | "Onboarding"
-    | "Live"
-    | "Blocked"
-    | "";
+  /** Rollout sign-off from each side. Both true = fully rolled out. */
+  productOpsDone?: boolean;
+  gtmDone?: boolean;
+  /** Excluded from rollout tracking; hidden from the active list. */
+  notRelevantForRollout?: boolean;
   gtmLabels?: string[];
   /** Notes surfaced for AE / AM visibility. */
   aeAmNotes?: string;

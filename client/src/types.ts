@@ -25,20 +25,17 @@ export interface JiraEpic {
 
 export type TshirtSize = "XS" | "S" | "M" | "L" | "XL" | "XXL" | "";
 
-export type OnboardingStatus =
-  | "Not Started"
-  | "Ready to Onboard"
-  | "Onboarding"
-  | "Live"
-  | "Blocked"
-  | "";
+export type Domain = "Payments" | "Contingent" | "EOR" | "Payroll" | "Other";
 
 export interface EpicOverlay {
   epicKey: string;
+  domain?: Domain | "";
   tshirtSize?: TshirtSize;
   productOpsOwner?: string;
   gtmOwner?: string;
-  onboardingStatus?: OnboardingStatus;
+  productOpsDone?: boolean;
+  gtmDone?: boolean;
+  notRelevantForRollout?: boolean;
   gtmLabels?: string[];
   aeAmNotes?: string;
   gtmVisible?: boolean;
