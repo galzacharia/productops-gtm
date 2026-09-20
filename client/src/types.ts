@@ -23,7 +23,7 @@ export interface JiraEpic {
   updated: string;
 }
 
-export type TshirtSize = "XS" | "S" | "M" | "L" | "XL" | "XXL" | "";
+export type TshirtSize = "S" | "M" | "L" | "";
 
 export type Domain = "Payments" | "Contingent" | "EOR" | "Payroll" | "Other";
 

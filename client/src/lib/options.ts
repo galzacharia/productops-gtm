@@ -1,13 +1,6 @@
 import type { Domain, TshirtSize } from "../types";
 
-export const TSHIRT_SIZES: Exclude<TshirtSize, "">[] = [
-  "XS",
-  "S",
-  "M",
-  "L",
-  "XL",
-  "XXL",
-];
+export const TSHIRT_SIZES: Exclude<TshirtSize, "">[] = ["S", "M", "L"];
 
 /** Product domains for grouping epics (Jira projects don't map 1:1). */
 export const DOMAINS: Domain[] = ["Payments", "Contingent", "EOR", "Payroll", "Other"];
@@ -37,16 +30,12 @@ export const GTM_OWNERS = [
 
 export function tshirtClass(size?: TshirtSize): string {
   switch (size) {
-    case "XS":
     case "S":
       return "bg-teal-100 text-teal-800";
     case "M":
       return "bg-sky-100 text-sky-800";
     case "L":
       return "bg-indigo-100 text-indigo-800";
-    case "XL":
-    case "XXL":
-      return "bg-fuchsia-100 text-fuchsia-800";
     default:
       return "bg-slate-100 text-slate-500";
   }
