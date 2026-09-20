@@ -30,6 +30,12 @@ export interface EpicOverlay {
   epicKey: string;
   /** Product domain: Payments | Contingent | EOR | Payroll | Other. Empty = auto-guess from Jira. */
   domain?: string;
+  /** Product type: EOR | Payroll | WF General | Contingent | Contractors | Other. Empty = auto-guess. */
+  productType?: string;
+  /** Internal | External. Internal features don't require GTM. */
+  audience?: string;
+  /** For internal features: which internal teams (Support, Finance, GPE, …). */
+  internalAudiences?: string[];
   tshirtSize?: "XS" | "S" | "M" | "L" | "XL" | "XXL" | "";
   productOpsOwner?: string;
   gtmOwner?: string;
@@ -44,6 +50,8 @@ export interface EpicOverlay {
   /** Whether this epic should be surfaced to AE / AM. */
   gtmVisible?: boolean;
   notes?: string;
+  /** Per-task rollout state keyed by task id: { done, owner }. */
+  tasks?: Record<string, { done?: boolean; owner?: string }>;
   updatedAt?: string;
   updatedBy?: string;
 }

@@ -1,6 +1,8 @@
 import type { EpicRow } from "../types";
 import { signalMeta } from "./onboarding";
 import { domainOf } from "./domain";
+import { productTypeOf } from "./productType";
+import { taskProgress } from "./rollout";
 
 function esc(v: unknown): string {
   const s = v == null ? "" : String(v);
@@ -11,10 +13,15 @@ export function rowsToCsv(rows: EpicRow[]): string {
   const headers = [
     "Epic",
     "Summary",
+    "Product Type",
     "Domain",
+    "Audience",
+    "Internal Audiences",
     "Project",
     "Jira Status",
     "Onboarding",
+    "Rollout %",
+    "Go-live Blockers Left",
     "T-shirt",
     "Product Ops Owner",
     "GTM Owner",
@@ -28,13 +35,19 @@ export function rowsToCsv(rows: EpicRow[]): string {
   ];
   const lines = rows.map((r) => {
     const o = r.overlay;
+    const pr = taskProgress(r);
     return [
       r.key,
       r.summary,
+      productTypeOf(r),
       domainOf(r),
+      o.audience ?? "",
+      (o.internalAudiences ?? []).join(" "),
       r.project,
       r.status,
       signalMeta(r).label,
+      `${pr.pct}%`,
+      pr.blockersLeft,
       o.tshirtSize ?? "",
       o.productOpsOwner ?? "",
       o.gtmOwner ?? "",

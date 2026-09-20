@@ -39,6 +39,16 @@ export function Filters({
         <option value="Done">Done</option>
       </select>
 
+      <select
+        value={filters.audience}
+        onChange={(e) => set({ audience: e.target.value })}
+        className={selectCls}
+      >
+        <option value="">All audiences</option>
+        <option value="External">External</option>
+        <option value="Internal">Internal</option>
+      </select>
+
       <label
         className={clsx(
           "inline-flex cursor-pointer items-center gap-2 rounded-lg border px-3 py-2 text-sm",

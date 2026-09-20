@@ -27,9 +27,28 @@ export type TshirtSize = "XS" | "S" | "M" | "L" | "XL" | "XXL" | "";
 
 export type Domain = "Payments" | "Contingent" | "EOR" | "Payroll" | "Other";
 
+export type ProductType =
+  | "EOR"
+  | "Payroll"
+  | "WF General"
+  | "Contingent"
+  | "Contractors"
+  | "Other";
+
+export type Audience = "Internal" | "External" | "";
+
+/** Per-task rollout state stored in the overlay, keyed by task id. */
+export interface TaskState {
+  done?: boolean;
+  owner?: string;
+}
+
 export interface EpicOverlay {
   epicKey: string;
   domain?: Domain | "";
+  productType?: ProductType | "";
+  audience?: Audience;
+  internalAudiences?: string[];
   tshirtSize?: TshirtSize;
   productOpsOwner?: string;
   gtmOwner?: string;
@@ -40,6 +59,7 @@ export interface EpicOverlay {
   aeAmNotes?: string;
   gtmVisible?: boolean;
   notes?: string;
+  tasks?: Record<string, TaskState>;
   updatedAt?: string;
   updatedBy?: string;
 }

@@ -1,18 +1,21 @@
 import type { Domain, EpicRow } from "../types";
 import { isExcluded, isRolledOut } from "./onboarding";
 import { domainOf } from "./domain";
+import { productTypeOf } from "./productType";
 
 export type ViewMode = "active" | "rolledout" | "notrelevant" | "all";
 
 export interface FilterState {
   search: string;
   statusCategory: string; // "" = all
+  audience: string; // "" = all
   gtmVisibleOnly: boolean;
 }
 
 export const emptyFilters: FilterState = {
   search: "",
   statusCategory: "",
+  audience: "",
   gtmVisibleOnly: false,
 };
 
@@ -27,6 +30,7 @@ export function inView(row: EpicRow, view: ViewMode): boolean {
 
 export function passFilters(row: EpicRow, f: FilterState): boolean {
   if (f.statusCategory && row.statusCategory !== f.statusCategory) return false;
+  if (f.audience && (row.overlay.audience ?? "") !== f.audience) return false;
   if (f.gtmVisibleOnly && !row.overlay.gtmVisible) return false;
   const q = f.search.trim().toLowerCase();
   if (q) {
@@ -39,6 +43,7 @@ export function passFilters(row: EpicRow, f: FilterState): boolean {
       row.overlay.productOpsOwner,
       row.overlay.gtmOwner,
       domainOf(row),
+      productTypeOf(row),
       ...row.labels,
       ...(row.overlay.gtmLabels ?? []),
     ]

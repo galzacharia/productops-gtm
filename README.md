@@ -34,6 +34,17 @@ Switch the quarter/year in the header and the app pulls the matching label live.
   (Payments / Contingent / EOR / Payroll / Other) so the list stays short.
   Domains are auto-guessed from the Jira project + title and can be overridden
   per epic.
+- **Product type** (EOR / Payroll / WF General / Contingent / Contractors /
+  Other) — the list is grouped and ordered by product type, and each group is
+  **collapsible** (with collapse-all / expand-all). Auto-guessed, overridable.
+- **Audience (Internal / External)** — set per epic. **Internal** features hide
+  the GTM owner and GTM sign-off (rollout completes on Product Ops alone), drop
+  GTM/marketing tasks from the checklist, and capture the internal audience
+  (Support / Finance / GPE / Sales Ops / CS).
+- **Per-epic rollout checklist** — open any epic's rollout page for a phased
+  checklist (from the Papaya rollout tracker), each task with a checkbox +
+  owner. A **progress bar** and **go-live gate** show how far along it is and
+  whether the go-live **blocker** tasks are cleared.
 - **Track epic status** straight from Jira (To Do / In Progress / Done), plus PM,
   story points, executive status, target quarter and fix version.
 - **Know when to onboard** — any epic that is **Done in Jira** is flagged

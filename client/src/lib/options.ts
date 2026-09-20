@@ -20,6 +20,9 @@ export const PRODUCT_OPS_OWNERS = [
   "Gal Zacharia",
 ];
 
+/** Internal audiences for internal-facing features. */
+export const INTERNAL_AUDIENCES = ["Support", "Finance", "GPE", "Sales Ops", "CS"];
+
 /** Assignable GTM owners. */
 export const GTM_OWNERS = [
   "Elad Ben David",
