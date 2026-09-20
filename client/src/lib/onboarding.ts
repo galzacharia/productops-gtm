@@ -17,8 +17,14 @@ export interface SignalMeta {
   urgency: number;
 }
 
+export function isInternal(row: EpicRow): boolean {
+  return row.overlay.audience === "Internal";
+}
+
 export function isRolledOut(row: EpicRow): boolean {
-  return !!(row.overlay.productOpsDone && row.overlay.gtmDone);
+  const o = row.overlay;
+  // Internal features don't need GTM sign-off.
+  return isInternal(row) ? !!o.productOpsDone : !!(o.productOpsDone && o.gtmDone);
 }
 
 export function isExcluded(row: EpicRow): boolean {
