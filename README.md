@@ -9,6 +9,28 @@ quarterly Jira label. On top of the read-only Jira data, this app adds a **GTM o
 — t-shirt size, Product Ops owner, GTM owner, onboarding status, AE/AM visibility and
 notes — that Jira doesn't track.
 
+### Current feature set
+
+The live frontend is the single-file app at **`server/public/index.html`** (ported from
+the shared team Artifact), served by the Express backend and wired to its REST API. It
+includes:
+
+- **Commit-only pull** — only epics whose Jira **Commitment** field = `Commit`
+  (`COMMIT_ONLY=true`).
+- **PM & UX lead from Jira** — the **Product Manager** (`customfield_10336`) and
+  **UX Design Lead** (`customfield_11352`) fields, shown as editable columns (free-text
+  UX values are normalized to the UX roster).
+- **GTM / Product Ops / Progress views**, product-type **and topic grouping** (with
+  cascade-set owners per topic), a **rollout checklist** per epic, a **progress
+  dashboard** (donut charts), **comments**, one-line **blurbs**, **AE/AM hide**,
+  **not-relevant** + **de-committed** handling, and manual (non-Jira) initiatives.
+- **Shared persistence** via the backend: epic overlays in `data/overlay.json`
+  (`OVERLAY_FILE`), manual initiatives + custom product types in `data/meta.json`
+  (`META_FILE`).
+
+> The `client/` React app is the earlier prototype, superseded by `server/public`.
+> It still builds, but the server serves `server/public/index.html` when present.
+
 ---
 
 ## How epics are pulled

@@ -19,6 +19,8 @@ function requestedFields(): string[] {
     f.epicStatus,
     f.executiveStatus,
     f.productManager,
+    f.uxDesignLead,
+    f.commitment,
     f.pmOwner,
     f.storyPoints,
     f.targetQuarter,
@@ -86,6 +88,8 @@ function mapIssue(issue: any): JiraEpic {
     projectKey: f.project?.key ?? "",
     assignee: readString(f.assignee),
     productManager: readString(f[cf.productManager]),
+    uxDesignLead: readString(f[cf.uxDesignLead]),
+    commitment: readString(f[cf.commitment]),
     pmOwner: readString(f[cf.pmOwner]),
     storyPoints: readNumber(f[cf.storyPoints]),
     targetQuarter: readString(f[cf.targetQuarter]),
@@ -113,6 +117,7 @@ export interface FetchEpicsResult {
 export async function fetchEpicsByLabel(label: string): Promise<JiraEpic[]> {
   const jqlParts = [`labels = "${label}"`];
   if (config.epicsOnly) jqlParts.push("issuetype = Epic");
+  if (config.commitOnly) jqlParts.push(`cf[10335] = "Commit"`);
   const jql = `${jqlParts.join(" AND ")} ORDER BY status ASC, updated DESC`;
 
   const url = `${config.jira.baseUrl}/rest/api/3/search/jql`;

@@ -21,6 +21,9 @@ RUN npm run build
 # so edits survive redeploys (otherwise they reset each deploy).
 RUN mkdir -p /app/data
 ENV OVERLAY_FILE=/app/data/overlay.json
+ENV META_FILE=/app/data/meta.json
+# Only track epics whose Jira Commitment field = "Commit".
+ENV COMMIT_ONLY=true
 
 # Hosts inject PORT; the server reads process.env.PORT and falls back to 8787.
 EXPOSE 8787

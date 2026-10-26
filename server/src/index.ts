@@ -4,8 +4,8 @@ import path from "node:path";
 import { existsSync } from "node:fs";
 import { config, quarterLabel } from "./config.js";
 import { fetchEpicsByLabel, JiraError } from "./jira.js";
-import { readStore, upsertOverlay } from "./overlay.js";
-import type { EpicOverlay } from "./types.js";
+import { readStore, upsertOverlay, readMeta, writeMeta } from "./overlay.js";
+import type { EpicOverlay, MetaStore } from "./types.js";
 
 const app = express();
 app.use(cors());
@@ -90,12 +90,44 @@ app.put("/api/overlay/:epicKey", async (req, res) => {
   }
 });
 
-// ---- Serve the built client in production ----
+// ---- Meta store: manual initiatives + product types ----
+app.get("/api/meta", async (_req, res) => {
+  try {
+    res.json(await readMeta());
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "Unknown error";
+    res.status(500).json({ error: message });
+  }
+});
+
+/** PUT /api/meta  body: { manuals?, productTypes? } — merged and persisted. */
+app.put("/api/meta", async (req, res) => {
+  const body = (req.body ?? {}) as Partial<MetaStore>;
+  const patch: Partial<MetaStore> = {};
+  if (Array.isArray(body.manuals)) patch.manuals = body.manuals;
+  if (Array.isArray(body.productTypes)) patch.productTypes = body.productTypes;
+  try {
+    res.json(await writeMeta(patch));
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "Unknown error";
+    res.status(500).json({ error: message });
+  }
+});
+
+// ---- Serve the app ----
+// The live frontend is the single-file app in server/public (ported from the
+// shared Claude Artifact). The React app under client/ is the earlier prototype.
+const publicDir = path.resolve(config.repoRoot, "server", "public");
 const clientDist = path.resolve(config.repoRoot, "client", "dist");
-if (existsSync(clientDist)) {
-  app.use(express.static(clientDist));
+const staticDir = existsSync(path.join(publicDir, "index.html"))
+  ? publicDir
+  : existsSync(clientDist)
+  ? clientDist
+  : null;
+if (staticDir) {
+  app.use(express.static(staticDir));
   app.get("*", (_req, res) => {
-    res.sendFile(path.join(clientDist, "index.html"));
+    res.sendFile(path.join(staticDir, "index.html"));
   });
 }
 

@@ -19,8 +19,12 @@ services:
         value: Product
       - key: EPICS_ONLY
         value: "true"
+      - key: COMMIT_ONLY
+        value: "true"
       - key: OVERLAY_FILE
         value: /app/data/overlay.json
+      - key: META_FILE
+        value: /app/data/meta.json
     disk:
       name: data
       mountPath: /app/data # keeps the GTM overlay across redeploys

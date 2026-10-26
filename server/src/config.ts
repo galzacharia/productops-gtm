@@ -22,6 +22,12 @@ export const config = {
   port: Number(process.env.PORT ?? 8787),
   labelPrefix: process.env.LABEL_PREFIX ?? "Product",
   epicsOnly: (process.env.EPICS_ONLY ?? "true").toLowerCase() !== "false",
+  /** When true, only pull epics whose Commitment field = "Commit". */
+  commitOnly: (process.env.COMMIT_ONLY ?? "true").toLowerCase() !== "false",
+  metaFile: path.resolve(
+    repoRoot,
+    process.env.META_FILE ?? "./data/meta.json",
+  ),
   overlayFile: path.resolve(
     repoRoot,
     process.env.OVERLAY_FILE ?? "./data/overlay.json",
@@ -48,6 +54,8 @@ export const config = {
     epicStatus: process.env.CF_EPIC_STATUS ?? "customfield_10012",
     executiveStatus: process.env.CF_EXECUTIVE_STATUS ?? "customfield_10328",
     productManager: process.env.CF_PRODUCT_MANAGER ?? "customfield_10336",
+    uxDesignLead: process.env.CF_UX_DESIGN_LEAD ?? "customfield_11352",
+    commitment: process.env.CF_COMMITMENT ?? "customfield_10335",
     pmOwner: process.env.CF_PM_OWNER ?? "customfield_10300",
     storyPoints: process.env.CF_STORY_POINTS ?? "customfield_10026",
     targetQuarter: process.env.CF_TARGET_QUARTER ?? "customfield_10496",

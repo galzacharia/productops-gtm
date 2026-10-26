@@ -13,6 +13,9 @@ export interface JiraEpic {
   projectKey: string;
   assignee?: string;
   productManager?: string;
+  uxDesignLead?: string;
+  /** Commitment field value: "Commit" | "Best Effort" | … */
+  commitment?: string;
   pmOwner?: string;
   storyPoints?: number;
   targetQuarter?: string;
@@ -39,6 +42,21 @@ export interface EpicOverlay {
   tshirtSize?: "XS" | "S" | "M" | "L" | "XL" | "XXL" | "";
   productOpsOwner?: string;
   gtmOwner?: string;
+  /** Overrides for the Jira Product Manager / UX Design Lead fields. */
+  pm?: string;
+  uxLead?: string;
+  /** Groups related epics so owners/rollout can be managed together. */
+  topic?: string;
+  /** One-line plain-language explanation for GTM / AE / AM. */
+  blurb?: string;
+  /** Threaded comments: { at, by, text }. */
+  comments?: { at: string; by?: string; text: string }[];
+  /** Force an internal epic to still appear on the GTM list. */
+  forceGtm?: boolean;
+  /** Hide from AE / AM (they see everything by default). */
+  aeAmHidden?: boolean;
+  /** Jira status captured at the moment the epic was marked not relevant. */
+  notRelevantAtStatus?: string;
   /** Rollout sign-off from each side. Both true = fully rolled out. */
   productOpsDone?: boolean;
   gtmDone?: boolean;
@@ -47,7 +65,7 @@ export interface EpicOverlay {
   gtmLabels?: string[];
   /** Notes surfaced for AE / AM visibility. */
   aeAmNotes?: string;
-  /** Whether this epic should be surfaced to AE / AM. */
+  /** Legacy opt-in visibility flag (superseded by aeAmHidden). */
   gtmVisible?: boolean;
   notes?: string;
   /** Per-task rollout state keyed by task id: { done, owner }. */
@@ -57,3 +75,22 @@ export interface EpicOverlay {
 }
 
 export type OverlayStore = Record<string, EpicOverlay>;
+
+/** A manually-tracked initiative that isn't a Jira epic. */
+export interface ManualInitiative {
+  id: string;
+  q: string;
+  team?: string; // "gtm" | "productops"
+  name?: string;
+  status?: string;
+  gtmOwner?: string;
+  opsOwner?: string;
+  goLive?: string;
+  notes?: string;
+}
+
+/** App-wide settings not tied to a single epic. */
+export interface MetaStore {
+  manuals: ManualInitiative[];
+  productTypes: string[];
+}

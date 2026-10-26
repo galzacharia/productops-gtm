@@ -1,0 +1,1071 @@
+<title>ProductOps × GTM Tracker</title>
+<meta name="description" content="Quarterly epic tracker preview" />
+<style>
+  :root {
+    --ground: #f3f6f4; --surface: #ffffff; --surface-2: #f7faf8;
+    --ink: #0f2019; --muted: #5c6b64; --faint: #8a978f;
+    --border: #e3ebe6; --border-strong: #d3ddd7;
+    --accent: #0fa968; --accent-ink: #087a4a; --accent-soft: #e4f6ec;
+    --ready-bg: #fdefd6; --ready-ink: #9a5b06;
+    --live-bg: #e2f5ea; --live-ink: #0b7a48;
+    --prog-bg: #e6eefc; --prog-ink: #24509e;
+    --blocked-bg: #fbe5e5; --blocked-ink: #b4322c;
+    --neutral-bg: #eef2f0; --neutral-ink: #64726b;
+    --xs-bg:#e0f2f0; --xs-ink:#0f6f66;
+    --m-bg:#e2eefb; --m-ink:#255ea0;
+    --l-bg:#e8e6fb; --l-ink:#5145b8;
+    --xl-bg:#f7e6f7; --xl-ink:#9b2f8f;
+    --int-bg:#efeafc; --int-ink:#6b46c1;
+    --ext-bg:#e2f0fb; --ext-ink:#1f6aa8;
+    --shadow: 0 1px 2px rgba(16,32,25,.04), 0 6px 20px rgba(16,32,25,.05);
+    --radius: 12px;
+    --font: "IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --display: "Sora", var(--font);
+    --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground: #0c1512; --surface: #121e19; --surface-2: #16241e;
+      --ink: #e7efe9; --muted: #9aa9a1; --faint: #6f7e76;
+      --border: #223129; --border-strong: #2d3f35;
+      --accent: #2bc783; --accent-ink: #6fe0ac; --accent-soft: #16362a;
+      --ready-bg:#3a2c11; --ready-ink:#f3c583; --live-bg:#123528; --live-ink:#67dba3;
+      --prog-bg:#182a44; --prog-ink:#8fb4f0; --blocked-bg:#3a1d1c; --blocked-ink:#f0a09a;
+      --neutral-bg:#1c2a23; --neutral-ink:#9aa9a1;
+      --xs-bg:#123230; --xs-ink:#63cdc2; --m-bg:#152b45; --m-ink:#8fb6ea;
+      --l-bg:#232052; --l-ink:#b0a6f0; --xl-bg:#38203a; --xl-ink:#e39bdc;
+      --int-bg:#241b3d; --int-ink:#c3b0f0; --ext-bg:#152c40; --ext-ink:#8fc0ea;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground: #0c1512; --surface: #121e19; --surface-2: #16241e;
+    --ink: #e7efe9; --muted: #9aa9a1; --faint: #6f7e76;
+    --border: #223129; --border-strong: #2d3f35;
+    --accent: #2bc783; --accent-ink: #6fe0ac; --accent-soft: #16362a;
+    --ready-bg:#3a2c11; --ready-ink:#f3c583; --live-bg:#123528; --live-ink:#67dba3;
+    --prog-bg:#182a44; --prog-ink:#8fb4f0; --blocked-bg:#3a1d1c; --blocked-ink:#f0a09a;
+    --neutral-bg:#1c2a23; --neutral-ink:#9aa9a1;
+    --xs-bg:#123230; --xs-ink:#63cdc2; --m-bg:#152b45; --m-ink:#8fb6ea;
+    --l-bg:#232052; --l-ink:#b0a6f0; --xl-bg:#38203a; --xl-ink:#e39bdc;
+    --int-bg:#241b3d; --int-ink:#c3b0f0; --ext-bg:#152c40; --ext-ink:#8fc0ea;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.35);
+  }
+  * { box-sizing: border-box; }
+  body { background: var(--ground); color: var(--ink); font-family: var(--font); line-height: 1.45; }
+  a { color: var(--accent-ink); }
+  h1,h2,h3 { font-family: var(--display); font-weight: 600; margin: 0; text-wrap: balance; }
+  button, input, select, textarea { font-family: inherit; font-size: inherit; color: inherit; }
+  ::placeholder { color: var(--faint); }
+  .wrap { max-width: 1440px; margin: 0 auto; padding-inline: 16px; }
+
+  header.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; background: color-mix(in srgb, var(--surface) 88%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--border); }
+  .top-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; padding-block: 14px; }
+  .brand h1 { font-size: 19px; letter-spacing: -.01em; }
+  .brand .x { color: var(--accent); }
+  .brand p { margin: 2px 0 0; color: var(--muted); font-size: 13px; }
+  .controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .qseg { display: inline-flex; border: 1px solid var(--border-strong); border-radius: 10px; overflow: hidden; }
+  .qseg button { background: var(--surface); border: 0; padding: 7px 13px; font-weight: 600; font-size: 13px; cursor: pointer; color: var(--muted); }
+  .qseg button[aria-pressed="true"] { background: var(--accent); color: #fff; }
+  .yr { border: 1px solid var(--border-strong); border-radius: 10px; background: var(--surface); padding: 7px 10px; font-size: 13px; font-weight: 600; }
+  .label-chip { font-family: var(--mono); font-size: 12.5px; background: var(--accent-soft); color: var(--accent-ink); border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent); padding: 6px 10px; border-radius: 8px; font-weight: 500; }
+  .theme-btn { border: 1px solid var(--border-strong); background: var(--surface); border-radius: 10px; width: 34px; height: 34px; cursor: pointer; display: grid; place-items: center; }
+
+  .note { display: flex; gap: 10px; align-items: flex-start; background: var(--surface-2); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 10px; padding: 10px 14px; margin-top: 14px; font-size: 12.5px; color: var(--muted); }
+  .note b { color: var(--ink); font-weight: 600; }
+
+  .tabs { display: flex; gap: 6px; margin-top: 16px; overflow-x: auto; padding-bottom: 2px; }
+  .tab { flex: 0 0 auto; border: 1px solid var(--border-strong); background: var(--surface); border-radius: 999px; padding: 7px 14px; font-size: 13px; font-weight: 600; cursor: pointer; color: var(--muted); display: inline-flex; align-items: center; gap: 7px; }
+  .tab[aria-pressed="true"] { background: var(--ink); color: var(--surface); border-color: var(--ink); }
+  .tab .c { font-size: 11px; font-weight: 700; background: var(--neutral-bg); color: var(--neutral-ink); border-radius: 999px; padding: 0 7px; font-variant-numeric: tabular-nums; }
+  .tab[aria-pressed="true"] .c { background: color-mix(in srgb, var(--surface) 25%, transparent); color: var(--surface); }
+
+  .tiles { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-top: 14px; }
+  .tile { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 14px; }
+  .tile .n { font-family: var(--display); font-size: 26px; font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: -.02em; }
+  .tile .l { font-size: 11.5px; font-weight: 600; margin-top: 2px; text-transform: uppercase; letter-spacing: .03em; }
+  .t-total .l { color: var(--muted); } .t-ready .l { color: var(--ready-ink); }
+  .t-rolled .l { color: var(--live-ink); } .t-noown .l { color: var(--blocked-ink); } .t-na .l { color: var(--faint); }
+
+  .barrow { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; margin-top: 16px; }
+  .viewseg { display: inline-flex; border: 1px solid var(--border-strong); border-radius: 10px; overflow: hidden; }
+  .viewseg button { background: var(--surface); border: 0; padding: 8px 13px; font-weight: 600; font-size: 12.5px; cursor: pointer; color: var(--muted); border-right: 1px solid var(--border); }
+  .viewseg button:last-child { border-right: 0; }
+  .viewseg button[aria-pressed="true"] { background: var(--accent-soft); color: var(--accent-ink); }
+  .filters { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .search { position: relative; min-width: 190px; }
+  .search input { width: 100%; border: 1px solid var(--border-strong); background: var(--surface); border-radius: 10px; padding: 9px 12px 9px 34px; font-size: 13.5px; }
+  .search svg { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: var(--faint); }
+  .filters select { border: 1px solid var(--border-strong); background: var(--surface); border-radius: 10px; padding: 9px 10px; font-size: 13px; }
+  .chk { display: inline-flex; align-items: center; gap: 7px; border: 1px solid var(--border-strong); background: var(--surface); border-radius: 10px; padding: 8px 11px; font-size: 13px; cursor: pointer; color: var(--muted); }
+  .chk input { accent-color: var(--accent); }
+  .count { color: var(--muted); font-size: 13px; margin-top: 12px; }
+  .count b { color: var(--ink); }
+
+  .tablewrap { margin-top: 8px; overflow-x: auto; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); }
+  table { width: 100%; border-collapse: collapse; min-width: 1480px; }
+  .cchip { font-size:10px; font-weight:700; color:var(--prog-ink); background:var(--prog-bg); border-radius:20px; padding:1px 7px; }
+  .commentlog { display:flex; flex-direction:column; gap:8px; max-height:220px; overflow-y:auto; }
+  .cmt { background:var(--surface-2); border:1px solid var(--border); border-radius:9px; padding:8px 10px; }
+  .cmt-meta { font-size:10.5px; color:var(--faint); font-weight:600; margin-bottom:3px; }
+  .cmt-text { font-size:13px; white-space:pre-wrap; word-break:break-word; }
+  .cmt-add { display:flex; gap:8px; align-items:flex-end; margin-top:4px; }
+  .cmt-add textarea { flex:1; border:1px solid var(--border-strong); background:var(--surface); border-radius:9px; padding:8px 10px; font-size:13px; min-height:40px; resize:vertical; }
+  .cmt-add .btn { white-space:nowrap; }
+  .aud-sel-int { background: var(--int-bg); color: var(--int-ink); font-weight: 600; }
+  .aud-sel-ext { background: var(--ext-bg); color: var(--ext-ink); font-weight: 600; }
+  tr.grouphdr td { background: var(--surface-2); border-bottom: 1px solid var(--border-strong); cursor: pointer; padding: 0; }
+  tr.grouphdr:hover td { background: var(--neutral-bg); }
+  .ghd { display: flex; align-items: center; gap: 10px; padding: 9px 12px; }
+  .chev { width: 12px; color: var(--muted); font-size: 11px; }
+  .gcount { color: var(--faint); font-size: 11.5px; }
+  .ctools { white-space: nowrap; }
+  .linkbtn { background: none; border: 0; color: var(--accent-ink); cursor: pointer; font-size: 13px; font-weight: 600; padding: 0; }
+  .linkbtn:hover { text-decoration: underline; }
+  .syncchip { font-size:11.5px; font-weight:600; padding:5px 9px; border-radius:8px; white-space:nowrap; }
+  .syncchip.ok { background:var(--live-bg); color:var(--live-ink); }
+  .syncchip.warn { background:var(--ready-bg); color:var(--ready-ink); }
+  .chgchip { margin-top:4px; font-size:10px; font-weight:700; color:var(--ready-ink); background:var(--ready-bg); border-radius:5px; padding:1px 6px; display:inline-block; white-space:nowrap; }
+  .exstat { margin-top:4px; font-size:10px; font-weight:600; color:var(--faint); background:var(--neutral-bg); border-radius:5px; padding:1px 6px; display:inline-block; }
+  .newbadge { font-size:9px; font-weight:800; letter-spacing:.04em; background:var(--accent); color:#fff; border-radius:4px; padding:1px 5px; margin-left:6px; vertical-align:middle; }
+  tr.isnew td:first-child { box-shadow: inset 3px 0 0 var(--accent); }
+  .eblurb { font-size:11.5px; color:var(--muted); margin-top:3px; font-style:italic; line-height:1.3; }
+  .decombadge { font-size:9px; font-weight:800; letter-spacing:.03em; background:var(--blocked-bg); color:var(--blocked-ink); border-radius:4px; padding:1px 5px; margin-left:6px; vertical-align:middle; }
+  tr.decommitted td:first-child { box-shadow: inset 3px 0 0 var(--blocked-ink); }
+  tr.decommitted { opacity:.75; }
+  .topic-tag { font-size:10px; font-weight:700; color:var(--accent-ink); background:var(--accent-soft); border-radius:20px; padding:1px 8px; }
+  .decomalert { display:flex; gap:10px; align-items:center; background:var(--blocked-bg); color:var(--blocked-ink); border:1px solid color-mix(in srgb, var(--blocked-ink) 30%, transparent); border-radius:10px; padding:10px 14px; margin-top:14px; font-size:13px; }
+  .decomalert button { margin-left:auto; border:1px solid currentColor; background:transparent; color:inherit; border-radius:8px; padding:5px 10px; font-weight:600; cursor:pointer; font-size:12.5px; white-space:nowrap; }
+  tr.topichdr .ghd { flex-wrap:wrap; }
+  .topicname { font-size:12.5px; font-weight:700; color:var(--accent-ink); }
+  .cascade { display:inline-flex; gap:6px; align-items:center; margin-left:12px; flex-wrap:wrap; }
+  .cascade-lbl { font-size:11px; color:var(--muted); font-weight:600; }
+  .cascade select { border:1px solid var(--border-strong); background:var(--surface); border-radius:7px; padding:4px 7px; font-size:11.5px; color:var(--muted); }
+  .grpby { display:inline-flex; align-items:center; gap:6px; font-size:12.5px; color:var(--muted); }
+  .grpby select { border:1px solid var(--border-strong); background:var(--surface); border-radius:10px; padding:9px 10px; font-size:13px; color:var(--ink); }
+  body[data-view="progress"] .note, body[data-view="progress"] #domTabs, body[data-view="progress"] #tiles, body[data-view="progress"] #manualCard, body[data-view="progress"] .barrow, body[data-view="progress"] #count, body[data-view="progress"] #tablewrap, body[data-view="progress"] #decommitAlert { display:none !important; }
+  .progress-page { display:none; }
+  body[data-view="progress"] .progress-page { display:block; margin-top:16px; }
+  .dash-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(270px,1fr)); gap:14px; }
+  .dcard { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:16px; }
+  .dcard h3 { font-size:13.5px; margin-bottom:4px; }
+  .dcard .dsub { font-size:11.5px; color:var(--muted); margin-bottom:10px; }
+  .donutwrap { display:flex; gap:14px; align-items:center; flex-wrap:wrap; }
+  .donut-top { font-family:var(--display); font-weight:700; font-size:22px; fill:var(--ink); }
+  .donut-bot { font-size:9px; fill:var(--faint); text-transform:uppercase; letter-spacing:.04em; }
+  .legend { display:flex; flex-direction:column; gap:6px; flex:1; min-width:120px; }
+  .legend .lg { display:flex; align-items:center; gap:7px; font-size:12px; color:var(--muted); }
+  .legend .sw { width:10px; height:10px; border-radius:3px; flex:0 0 auto; }
+  .legend .lgval { margin-left:auto; font-weight:700; color:var(--ink); font-variant-numeric:tabular-nums; }
+  .dstat-row { display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); gap:10px; margin-bottom:14px; }
+  .typebars { display:flex; flex-direction:column; gap:10px; }
+  .tb-head { display:flex; justify-content:space-between; font-size:12px; margin-bottom:3px; gap:8px; }
+  .tb-head b { color:var(--ink); } .tb-head span { color:var(--muted); text-align:right; }
+  .tb-bar { height:8px; border-radius:5px; background:var(--neutral-bg); overflow:hidden; }
+  .tb-bar > span { display:block; height:100%; background:var(--accent); }
+  .dash-note { font-size:12px; color:var(--muted); margin:4px 0 14px; }
+  .viewmode { display:inline-flex; border:1px solid var(--border-strong); border-radius:12px; overflow:hidden; margin-top:14px; }
+  .viewmode button { background:var(--surface); border:0; padding:10px 20px; font-family:var(--display); font-weight:600; font-size:14px; cursor:pointer; color:var(--muted); }
+  .viewmode button[aria-pressed="true"] { background:var(--accent); color:#fff; }
+  .mcard { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:14px; margin-top:14px; }
+  .mcard h3 { font-size:14px; }
+  .mcard .sub { font-size:12px; color:var(--muted); margin:3px 0 10px; }
+  .mrow { display:grid; grid-template-columns:1.5fr .85fr 1fr .9fr 1.4fr auto; gap:8px; align-items:center; padding:7px 0; border-top:1px solid var(--border); }
+  .mrow input, .mrow select { border:1px solid var(--border-strong); background:var(--surface); border-radius:8px; padding:7px 9px; font-size:13px; width:100%; }
+  .mrow .del, .trow .del { border:0; background:none; color:var(--faint); cursor:pointer; padding:6px; border-radius:7px; }
+  .mrow .del:hover, .trow .del:hover { color:var(--blocked-ink); background:var(--surface-2); }
+  .mempty { font-size:12.5px; color:var(--faint); padding:8px 0; }
+  .modalwrap { position:fixed; inset:0; z-index:60; display:flex; align-items:center; justify-content:center; background:rgba(10,20,15,.4); padding:16px; }
+  .modalwrap[hidden] { display:none; }
+  .modalbox { background:var(--surface); border:1px solid var(--border); border-radius:14px; box-shadow:var(--shadow); width:min(430px,100%); max-height:85vh; overflow:auto; padding:18px; }
+  .modalbox h3 { font-size:15px; margin-bottom:4px; }
+  .trow { display:flex; gap:8px; align-items:center; padding:5px 0; }
+  .trow input { flex:1; border:1px solid var(--border-strong); background:var(--surface); border-radius:8px; padding:7px 9px; font-size:13px; }
+  .modal-actions { display:flex; justify-content:flex-end; gap:8px; margin-top:14px; }
+  @media (max-width:560px){ .mrow { grid-template-columns:1fr 1fr; } }
+  thead th { position: sticky; top: 0; text-align: left; font-size: 10.5px; text-transform: uppercase; letter-spacing: .05em; color: var(--faint); font-weight: 700; padding: 11px 12px; background: var(--surface-2); border-bottom: 1px solid var(--border); white-space: nowrap; }
+  tbody td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; font-size: 13px; }
+  tbody tr:last-child td { border-bottom: 0; }
+  tbody tr:hover { background: var(--surface-2); }
+  tr.excluded { opacity: .55; }
+  tr.ptbreak td { border-top: 2px solid var(--border-strong); }
+  .epic-key { font-family: var(--mono); font-size: 11.5px; font-weight: 600; color: var(--accent-ink); text-decoration: none; }
+  .epic-key:hover { text-decoration: underline; }
+  .epic-sum { display: block; text-align: left; background: none; border: 0; padding: 3px 0 0; cursor: pointer; color: var(--ink); font-size: 13px; line-height: 1.35; }
+  .epic-sum:hover { color: var(--accent-ink); }
+  .metarow { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 5px; align-items: center; }
+  .dom-tag { font-size: 10px; color: var(--faint); text-transform: uppercase; letter-spacing: .04em; font-weight: 700; }
+  .lbl { font-size: 10.5px; background: var(--neutral-bg); color: var(--neutral-ink); padding: 1px 6px; border-radius: 20px; }
+  .lbl.gtm { background: var(--accent-soft); color: var(--accent-ink); }
+  .aud { font-size: 10px; font-weight: 700; padding: 1px 7px; border-radius: 20px; text-transform: uppercase; letter-spacing: .03em; }
+  .aud-int { background: var(--int-bg); color: var(--int-ink); }
+  .aud-ext { background: var(--ext-bg); color: var(--ext-ink); }
+  .ptype { font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 6px; white-space: nowrap; background: var(--neutral-bg); color: var(--neutral-ink); }
+  .pt-EOR { background:#e2eefb; color:#255ea0; } .pt-Payroll { background:#e8e6fb; color:#5145b8; }
+  .pt-WFGeneral { background:#e0f2f0; color:#0f6f66; } .pt-Contingent { background:#fdefd6; color:#9a5b06; }
+  .pt-Contractors { background:#f7e6f7; color:#9b2f8f; } .pt-Other { background:var(--neutral-bg); color:var(--neutral-ink); }
+  .pill { display: inline-flex; align-items: center; gap: 5px; font-size: 11.5px; font-weight: 600; padding: 3px 9px; border-radius: 20px; white-space: nowrap; }
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+  .s-done { background: var(--live-bg); color: var(--live-ink); } .s-prog { background: var(--prog-bg); color: var(--prog-ink); } .s-todo { background: var(--neutral-bg); color: var(--neutral-ink); }
+  .sig-ready { background: var(--ready-bg); color: var(--ready-ink); } .sig-rolledout { background: var(--live-bg); color: var(--live-ink); } .sig-not-ready { background: var(--neutral-bg); color: var(--neutral-ink); }
+  td select, td input.owner { width: 100%; min-width: 116px; border: 1px solid var(--border); background: var(--surface); border-radius: 8px; padding: 5px 7px; font-size: 12.5px; }
+  td select:focus, td input:focus, .drawer input:focus, .drawer select:focus, .drawer textarea:focus, .rollout-page input:focus, .rollout-page select:focus { outline: 2px solid color-mix(in srgb, var(--accent) 45%, transparent); border-color: var(--accent); }
+  .tshirt-XS, .tshirt-S { background: var(--xs-bg); color: var(--xs-ink); font-weight: 600; }
+  .tshirt-M { background: var(--m-bg); color: var(--m-ink); font-weight: 600; }
+  .tshirt-L { background: var(--l-bg); color: var(--l-ink); font-weight: 600; }
+  .tshirt-XL, .tshirt-XXL { background: var(--xl-bg); color: var(--xl-ink); font-weight: 600; }
+  .signoff-cell { display: flex; flex-direction: column; gap: 4px; }
+  .signoff-cell label { display: inline-flex; align-items: center; gap: 5px; font-size: 11.5px; color: var(--muted); white-space: nowrap; cursor: pointer; }
+  .signoff-cell input { accent-color: var(--accent); }
+  .signoff-cell .doneflag { font-size: 10.5px; font-weight: 700; color: var(--live-ink); }
+  .na { font-size: 11px; color: var(--faint); font-style: italic; }
+  .progcell { cursor: pointer; border: 0; background: none; width: 100%; text-align: left; padding: 0; }
+  .progbar { height: 7px; border-radius: 5px; background: var(--neutral-bg); overflow: hidden; }
+  .progbar > span { display: block; height: 100%; background: var(--accent); }
+  .progbar.blocked > span { background: var(--ready-ink); }
+  .progmeta { font-size: 10.5px; color: var(--muted); margin-top: 3px; display: flex; gap: 6px; align-items: center; white-space: nowrap; }
+  .blk { color: var(--blocked-ink); font-weight: 700; }
+  .golive { color: var(--live-ink); font-weight: 700; }
+  .eye, .exbtn { border: 0; background: none; cursor: pointer; padding: 5px; border-radius: 7px; color: var(--faint); display: grid; place-items: center; }
+  .eye.on { color: var(--live-ink); } .exbtn.on { color: var(--blocked-ink); }
+  .eye:hover, .exbtn:hover { background: var(--surface-2); }
+  .empty { padding: 60px 20px; text-align: center; color: var(--muted); }
+
+  .scrim { position: fixed; inset: 0; background: rgba(10,20,15,.4); z-index: 40; opacity: 0; pointer-events: none; transition: opacity .2s; }
+  .scrim.open { opacity: 1; pointer-events: auto; }
+  .drawer { position: fixed; top: 0; right: 0; height: 100%; width: min(460px, 100%); background: var(--surface); border-left: 1px solid var(--border); box-shadow: var(--shadow); z-index: 50; transform: translateX(100%); transition: transform .22s ease; display: flex; flex-direction: column; }
+  .drawer.open { transform: translateX(0); }
+  .drawer-head { padding: 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; }
+  .drawer-head h2 { font-size: 15.5px; margin-top: 8px; line-height: 1.3; }
+  .drawer-body { padding: 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; }
+  .close { border: 0; background: none; cursor: pointer; color: var(--muted); font-size: 22px; line-height: 1; padding: 2px 6px; border-radius: 8px; }
+  .close:hover { background: var(--surface-2); }
+  .facts { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; background: var(--surface-2); border-radius: 10px; padding: 12px; }
+  .facts .k { font-size: 10px; text-transform: uppercase; letter-spacing: .04em; color: var(--faint); font-weight: 700; }
+  .facts .v { font-size: 13px; margin-top: 1px; }
+  .sect-label { font-size: 10.5px; text-transform: uppercase; letter-spacing: .05em; font-weight: 700; color: var(--accent-ink); }
+  .divider { height: 1px; background: var(--border); }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .field label { display: block; font-size: 10.5px; text-transform: uppercase; letter-spacing: .04em; color: var(--faint); font-weight: 700; margin-bottom: 5px; }
+  .field input, .field select, .field textarea { width: 100%; border: 1px solid var(--border-strong); background: var(--surface); border-radius: 9px; padding: 8px 10px; font-size: 13px; }
+  .field textarea { resize: vertical; min-height: 60px; }
+  .iachips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .iachips label { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; border: 1px solid var(--border-strong); border-radius: 20px; padding: 4px 10px; cursor: pointer; color: var(--muted); }
+  .iachips input { accent-color: var(--int-ink); }
+  .signoff { display: flex; flex-direction: column; gap: 9px; background: var(--surface-2); border: 1px solid var(--border); border-radius: 10px; padding: 12px; }
+  .switch { display: flex; align-items: center; gap: 9px; font-size: 13.5px; cursor: pointer; }
+  .switch input { accent-color: var(--accent); width: 16px; height: 16px; }
+  .switch.warn { color: var(--blocked-ink); }
+  .rolled-banner { background: var(--live-bg); color: var(--live-ink); border-radius: 8px; padding: 7px 10px; font-size: 12.5px; font-weight: 600; text-align: center; }
+  .btn { border: 1px solid var(--border-strong); background: var(--surface); border-radius: 9px; padding: 9px 12px; font-size: 13px; font-weight: 600; cursor: pointer; color: var(--ink); display: inline-flex; align-items: center; gap: 7px; }
+  .btn.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .updated { font-size: 11.5px; color: var(--faint); }
+
+  /* Rollout page */
+  .rollout-page { display: none; }
+  body.rollout .main-list { display: none; }
+  body.rollout .rollout-page { display: block; }
+  .rp-back { margin-top: 16px; }
+  .rp-head { margin-top: 12px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; }
+  .rp-head h2 { font-size: 18px; line-height: 1.25; margin-top: 8px; }
+  .rp-meta { display: flex; flex-wrap: wrap; gap: 7px; align-items: center; }
+  .rp-progwrap { margin-top: 16px; display: grid; grid-template-columns: 1fr; gap: 12px; }
+  .rp-golive { border-radius: 10px; padding: 12px 14px; font-weight: 600; font-size: 13.5px; display: flex; align-items: center; gap: 9px; }
+  .rp-golive.ok { background: var(--live-bg); color: var(--live-ink); }
+  .rp-golive.no { background: var(--ready-bg); color: var(--ready-ink); }
+  .rp-bigbar { height: 12px; border-radius: 8px; background: var(--neutral-bg); overflow: hidden; }
+  .rp-bigbar > span { display: block; height: 100%; background: var(--accent); transition: width .25s; }
+  .rp-progline { display: flex; justify-content: space-between; font-size: 12.5px; color: var(--muted); margin-bottom: 6px; }
+  .rp-progline b { color: var(--ink); font-variant-numeric: tabular-nums; }
+  .phase { margin-top: 18px; }
+  .phase-h { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .phase-n { width: 24px; height: 24px; border-radius: 7px; background: var(--ink); color: var(--surface); display: grid; place-items: center; font-family: var(--display); font-weight: 700; font-size: 12px; }
+  .phase-h h3 { font-size: 14px; }
+  .phase-h .pc { font-size: 11.5px; color: var(--muted); margin-left: auto; font-variant-numeric: tabular-nums; }
+  .tasklist { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+  .task { display: grid; grid-template-columns: 22px 1fr auto; gap: 12px; align-items: center; padding: 11px 14px; border-bottom: 1px solid var(--border); }
+  .task:last-child { border-bottom: 0; }
+  .task.done { background: color-mix(in srgb, var(--live-bg) 40%, transparent); }
+  .task input.tk { width: 17px; height: 17px; accent-color: var(--accent); cursor: pointer; }
+  .task .ttl { font-size: 13.5px; }
+  .task.done .ttl { text-decoration: line-through; color: var(--muted); }
+  .task .tmeta { display: flex; gap: 6px; margin-top: 3px; flex-wrap: wrap; }
+  .teamchip { font-size: 10px; font-weight: 700; letter-spacing: .03em; background: var(--neutral-bg); color: var(--neutral-ink); border-radius: 4px; padding: 1px 6px; }
+  .blkbadge { font-size: 10px; font-weight: 700; background: var(--blocked-bg); color: var(--blocked-ink); border-radius: 4px; padding: 1px 6px; }
+  .task .tright { display: flex; align-items: center; gap: 8px; }
+  .task .towner { border: 1px solid var(--border); background: var(--surface); border-radius: 8px; padding: 5px 8px; font-size: 12px; width: 150px; }
+
+  @media (max-width: 900px) { .tiles { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 560px) { .tiles { grid-template-columns: repeat(2, 1fr); } .facts, .grid2 { grid-template-columns: 1fr; } .task { grid-template-columns: 22px 1fr; } .task .tright { grid-column: 2; justify-content: flex-start; } .task .towner { width: 100%; } }
+</style>
+
+<header class="top">
+  <div class="wrap top-row">
+    <div class="brand">
+      <h1>ProductOps <span class="x">×</span> GTM</h1>
+      <p>Quarterly epic tracker &amp; rollout readiness</p>
+    </div>
+    <div class="controls">
+      <div class="qseg" id="qseg" role="group" aria-label="Quarter">
+        <button data-q="1">Q1</button><button data-q="2">Q2</button>
+        <button data-q="3">Q3</button><button data-q="4" aria-pressed="true">Q4</button>
+      </div>
+      <select class="yr" id="yr" aria-label="Year"><option>2026</option></select>
+      <span class="label-chip" id="labelChip">Product_Q426</span>
+      <span class="syncchip" id="syncStatus"></span>
+      <button class="theme-btn" id="themeBtn" title="Toggle theme" aria-label="Toggle theme">◐</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap" style="padding-block: 4px 40px;">
+  <div class="main-list">
+    <div class="viewmode" id="viewmode" role="group" aria-label="App view">
+      <button data-vm="gtm">GTM View</button>
+      <button data-vm="productops">Product Ops View</button>
+      <button data-vm="progress">📊 Progress</button>
+    </div>
+    <div id="decommitAlert"></div>
+    <div class="note">
+      <span>ℹ️</span>
+      <div><b>Live preview</b> — real Papaya epics from Jira. <b>Q4 2026</b> (<span style="font-family:var(--mono)">Product_Q426</span>) shows the <b>in-quarter Q4 epics</b> (Commitment = <b>Commit</b> only; Best Effort, not-yet-committed, "Out of Q", Change-Request and Cancelled are excluded). Switch to <b>Q3</b> for that snapshot. Read-only; your edits save in your browser. Open any epic's <b>Rollout ▸</b> bar for its full checklist.</div>
+    </div>
+
+    <div class="tabs" id="domTabs"></div>
+    <div class="tiles" id="tiles"></div>
+    <div id="manualCard"></div>
+
+    <div class="barrow">
+      <div class="viewseg" id="viewseg" role="group" aria-label="View">
+        <button data-v="active" aria-pressed="true">Active</button>
+        <button data-v="rolledout">Rolled out</button>
+        <button data-v="notrelevant">Not relevant</button>
+        <button data-v="decommitted">⚠ De-committed</button>
+        <button data-v="all">All</button>
+      </div>
+      <div class="filters">
+        <span class="grpby">Group: <select id="groupBy"><option value="ptype">Product type</option><option value="topic">Topic</option></select></span>
+        <div class="search">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+          <input id="search" placeholder="Search…" />
+        </div>
+        <select id="fStatus"><option value="">All statuses</option><option>To Do</option><option>In Progress</option><option>Done</option></select>
+        <select id="fAudience"><option value="">All audiences</option><option>External</option><option>Internal</option></select>
+        <label class="chk"><input type="checkbox" id="fHidden" /> Hidden from AE/AM</label>
+        <label class="chk"><input type="checkbox" id="fNew" /> New this quarter</label>
+        <label class="chk"><input type="checkbox" id="fChanged" /> Changed since refresh</label>
+        <button id="manageTypes" class="chk" type="button">⚙ Types</button>
+      </div>
+    </div>
+
+    <div class="count" id="count"></div>
+    <div class="tablewrap" id="tablewrap"></div>
+    <section class="progress-page" id="progressPage"></section>
+  </div>
+
+  <datalist id="topicList"></datalist>
+  <section class="rollout-page" id="rolloutPage"></section>
+</main>
+
+<div class="modalwrap" id="typeModal" hidden></div>
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-hidden="true"></aside>
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" />
+<script>
+let DATASETS = {};
+let activeQ = "4";
+let EPICS = [];
+
+const TSHIRTS = ["S","M","L"];
+const PRODUCT_OPS = ["Orit Neeman","Tom Arad","Golan Lavan","Gal Zacharia"];
+const GTM_PEOPLE = ["Elad Ben David","Shai Beres","Jessica Ruyburn","Eric Weaver","Sarah Ilan","Ina Koporcic","Sivanne Fishel","Zara Meller"];
+const UX_LEADS = ["Yuval Brill","Yael Nahum","Noa Yadid","Gal Admon","Anna Masliansky","Oshrat Levy","Yuliia Kryvenko"];
+let ME = "";
+function pmPeople(){ const s=new Set(); EPICS.forEach(e=>{ if(e.pmJira) s.add(e.pmJira); }); Object.values(overlays).forEach(o=>{ if(o&&o.pm) s.add(o.pm); }); return [...s].sort((a,b)=>a.toLowerCase().localeCompare(b.toLowerCase())); }
+function pmOf(e){ const o=ov(e.key); return (o.pm!==undefined && o.pm!=="") ? o.pm : (e.pmJira||""); }
+function uxOf(e){ const o=ov(e.key); return (o.uxLead!==undefined && o.uxLead!=="") ? o.uxLead : (e.uxJira||""); }
+function addComment(key, text){ text=(text||"").trim(); if(!text) return; const list=(ov(key).comments||[]).slice(); list.push({at:new Date().toISOString(), by:ME||"", text}); setOv(key,{comments:list}); }
+const DOMAINS = ["Payments","Contingent","EOR","Payroll","Other"];
+const DEFAULT_PRODUCT_TYPES = ["EOR","Payroll","WF General","Contingent","Contractors","Other"];
+function loadTypes(){ return DEFAULT_PRODUCT_TYPES.slice(); }
+function saveTypes(){ apiPut("/api/meta", { productTypes: PRODUCT_TYPES }); }
+let PRODUCT_TYPES = loadTypes();
+const MANUAL_STATUSES = ["Planned","In progress","Live","Blocked"];
+const REFRESHED = {"3":"live from Jira","4":"live from Jira"};
+const INTERNAL_AUDIENCES = ["Support","Finance","GPE","Sales Ops","CS"];
+const STORE_KEY = "productops_gtm_overlay_v3";
+
+const PHASES = [
+  {n:1, name:"Discovery & Scoping"},
+  {n:2, name:"Build & QA"},
+  {n:3, name:"Pre-Launch Readiness — Content & Enablement"},
+  {n:4, name:"Beta / Design Partners"},
+  {n:5, name:"GA Launch"},
+  {n:6, name:"Post-Launch & Monitoring"},
+];
+// Shortened from the Slack rollout tracker (52 → 38 tasks; marketing/enablement duplicates merged).
+// blocker: must be done before go-live.  gtm: external go-to-market task (hidden for internal epics).
+const TASK_TEMPLATE = [
+  {id:"t1", ph:1, title:"Define scope, goals & success metrics (KPIs)", team:"PM"},
+  {id:"t2", ph:1, title:"Confirm rollout scope — orgs / roles / countries / segments", team:"PM·PO"},
+  {id:"t3", ph:1, title:"Align on naming & terminology", team:"PMM·PO"},
+  {id:"t4", ph:1, title:"Map dependencies, risks & compliance needs", team:"PM"},
+  {id:"t5", ph:1, title:"Define rollout phases & timeline (beta → GA)", team:"PO"},
+  {id:"t6", ph:2, title:"QA / end-to-end testing passed in staging", team:"QA·R&D", blocker:true},
+  {id:"t7", ph:2, title:"Configure feature flags (per-org capable)", team:"R&D"},
+  {id:"t8", ph:2, title:"Configure permissions & roles", team:"R&D·PO", blocker:true},
+  {id:"t9", ph:2, title:"Security review", team:"R&D", blocker:true},
+  {id:"t10", ph:2, title:"Instrument analytics events (Pendo / Mixpanel)", team:"DATA·PM"},
+  {id:"t11", ph:2, title:"Set up monitoring & failure alerts", team:"R&D·PO"},
+  {id:"t12", ph:2, title:"Confirm pricing / packaging (if applicable)", team:"PM·FIN"},
+  {id:"t13", ph:2, title:"Legal / contract review (if applicable)", team:"LEGAL"},
+  {id:"t14", ph:3, title:"Write & publish support article(s) + KB / coverage pages", team:"SUP", blocker:true},
+  {id:"t15", ph:3, title:"Build & publish Pendo in-app guides", team:"PO·DATA"},
+  {id:"t16", ph:3, title:"GTM materials — two-pager, battle card, sales deck", team:"PMM", gtm:true},
+  {id:"t17", ph:3, title:"Prepare demo environment & script", team:"PM·PMM"},
+  {id:"t18", ph:3, title:"Sales enablement — AE & AM/IM sessions", team:"GTM", gtm:true},
+  {id:"t19", ph:3, title:"Internal announcement + FAQ", team:"PO"},
+  {id:"t20", ph:3, title:"Produce explainer / demo video", team:"MKT·PMM", gtm:true},
+  {id:"t21", ph:3, title:"Update website / platform page", team:"MKT", gtm:true},
+  {id:"t22", ph:4, title:"Finalize beta / design-partner customer list", team:"PO·PM"},
+  {id:"t23", ph:4, title:"AM outreach & confirm AMs ready", team:"PO·GTM", gtm:true},
+  {id:"t24", ph:4, title:"Enable feature flags for beta orgs", team:"R&D"},
+  {id:"t25", ph:4, title:"Beta feedback loop — collect, monitor, iterate", team:"PO·PM"},
+  {id:"t26", ph:5, title:"Go / no-go decision", team:"PM·PO", blocker:true},
+  {id:"t27", ph:5, title:"Enable feature flags for full GA segment", team:"R&D", blocker:true},
+  {id:"t28", ph:5, title:"Publish support content live / remove restrictions", team:"SUP"},
+  {id:"t29", ph:5, title:"Send client communication email", team:"PO·GTM", gtm:true},
+  {id:"t30", ph:5, title:"Marketing — social posts & launch video", team:"MKT", gtm:true},
+  {id:"t31", ph:5, title:"Post internal launch announcement", team:"PO"},
+  {id:"t32", ph:5, title:"Confirm sales team notified & materials live", team:"GTM", gtm:true},
+  {id:"t33", ph:6, title:"Monitor adoption metrics vs KPIs", team:"DATA·PM"},
+  {id:"t34", ph:6, title:"Monitor failure alerts & support tickets", team:"PO·SUP"},
+  {id:"t35", ph:6, title:"Post weekly rollout status update", team:"PO"},
+  {id:"t36", ph:6, title:"Collect customer feedback / satisfaction", team:"PO·PM"},
+  {id:"t37", ph:6, title:"Run retro / lessons learned", team:"PO"},
+  {id:"t38", ph:6, title:"Hand off to BAU / confirm ongoing ownership", team:"PO·PM"},
+];
+
+let overlays = {};
+let selectedKey = null, rolloutKey = null, currentDomain = "All", view = "active";
+let viewMode = (function(){ try { return localStorage.getItem("pogtm_viewmode_v1")||"gtm"; } catch { return "gtm"; } })();
+if (viewMode==="progress") viewMode="gtm";
+function saveViewMode(){ try { localStorage.setItem("pogtm_viewmode_v1", viewMode); } catch {} }
+let groupBy = (function(){ try { return localStorage.getItem("pogtm_groupby_v1")||"ptype"; } catch { return "ptype"; } })();
+function saveGroupBy(){ try { localStorage.setItem("pogtm_groupby_v1", groupBy); } catch {} }
+function loadManuals(){ return []; }
+function saveManuals(){ apiPut("/api/meta", { manuals }); }
+function persistManual(m){ saveManuals(); }
+function removeManualDoc(id){ saveManuals(); }
+let manuals = [];
+let collapsed = loadCollapsed();
+const filters = { search:"", status:"", audience:"", hidden:false, isNew:false, changed:false };
+let DB = null, canWrite = true; let online = false; const API = "";
+const pendingWrites = {};
+
+function loadCollapsed(){ try { return new Set(JSON.parse(localStorage.getItem("pogtm_collapsed_v1")||"[]")); } catch { return new Set(); } }
+function saveCollapsed(){ try { localStorage.setItem("pogtm_collapsed_v1", JSON.stringify([...collapsed])); } catch {} }
+
+function loadOverlays(){ return {}; }
+function saveOverlays(){ if(!DB){ try { localStorage.setItem(STORE_KEY, JSON.stringify(overlays)); } catch {} } }
+function ov(key){ return overlays[key] || {}; }
+function onWriteErr(e){ if(e && e.code==="invalid_argument"){ canWrite=false; showSync(); } }
+function persistOverlay(key){
+  clearTimeout(pendingWrites[key]);
+  pendingWrites[key]=setTimeout(()=>{
+    const body=overlays[key];
+    fetch(API+"/api/overlay/"+encodeURIComponent(key), {method:"PUT", headers:{"Content-Type":"application/json"}, body:JSON.stringify(body)})
+      .then(r=>{ if(!r.ok) throw new Error("HTTP "+r.status); delete pendingWrites[key]; if(!online){ online=true; showSync(); } })
+      .catch(()=>{ delete pendingWrites[key]; online=false; showSync(); });
+  }, 400);
+}
+function setOv(key, patch){ overlays[key] = Object.assign({}, overlays[key]||{}, patch, { epicKey:key, updatedAt:new Date().toISOString() }); persistOverlay(key); }
+function setTask(key, taskId, patch){
+  const o = overlays[key] || { epicKey:key }; const tasks = Object.assign({}, o.tasks);
+  tasks[taskId] = Object.assign({}, tasks[taskId], patch);
+  setOv(key, { tasks });
+}
+function toggleExclude(key, on){
+  const patch = { notRelevantForRollout: on };
+  if (on){ const e = EPICS.find(x=>x.key===key); if (e) patch.notRelevantAtStatus = e.status; }
+  setOv(key, patch);
+}
+
+function autoDomain(e){
+  const t = (e.summary+" "+(e.labels||[]).join(" ")+" "+e.project).toLowerCase();
+  if (e.project==="Payments"||e.project==="Bettina") return "Payments";
+  if (t.includes("contingent")) return "Contingent";
+  if (/\beor\b/.test(t)||t.includes("employer of record")) return "EOR";
+  if (e.project==="Payroll"||t.includes("payroll")||t.includes("t&a")||t.includes("payslip")||t.includes("off cycle")||t.includes("off-cycle")) return "Payroll";
+  return "Other";
+}
+function autoProductType(e){
+  const t = (e.summary+" "+(e.labels||[]).join(" ")+" "+e.project).toLowerCase();
+  if (t.includes("contractor")) return "Contractors";
+  if (t.includes("contingent")) return "Contingent";
+  if (/\beor\b/.test(t)||t.includes("employer of record")) return "EOR";
+  if (t.includes("payroll")||t.includes("payslip")||t.includes("off cycle")||t.includes("off-cycle")) return "Payroll";
+  if (t.includes("workforce")||t.includes("wfos")||t.includes("wos")||t.includes("t&a")||t.includes("attendance")||t.includes("wf_")) return "WF General";
+  return "Other";
+}
+function domainOf(e){ return ov(e.key).domain || autoDomain(e); }
+function productTypeOf(e){ return ov(e.key).productType || autoProductType(e); }
+function isInternal(e){ return ov(e.key).audience === "Internal"; }
+function isRolled(e){ const o = ov(e.key); return isInternal(e) ? !!o.productOpsDone : !!(o.productOpsDone && o.gtmDone); }
+function isExcluded(e){ return !!ov(e.key).notRelevantForRollout; }
+function isDeCommitted(e){ return !!e.deCommitted; }
+function topicOf(e){ return (ov(e.key).topic||"").trim(); }
+const NO_TOPIC = "Untagged (no topic)";
+function groupKeyOf(e){ return groupBy==="topic" ? (topicOf(e)||NO_TOPIC) : productTypeOf(e); }
+function allTopics(){ const s=new Set(); EPICS.forEach(e=>{ const t=topicOf(e); if(t) s.add(t); }); return [...s].sort((a,b)=>a.toLowerCase().localeCompare(b.toLowerCase())); }
+
+function applicableTasks(e){ const internal = isInternal(e); return TASK_TEMPLATE.filter(t => !(internal && t.gtm)); }
+function progress(e){
+  const tasks = applicableTasks(e); const st = ov(e.key).tasks || {};
+  const done = tasks.filter(t => st[t.id]?.done).length;
+  const blockers = tasks.filter(t => t.blocker);
+  const blockersDone = blockers.filter(t => st[t.id]?.done).length;
+  const blockersLeft = blockers.length - blockersDone;
+  return { done, total: tasks.length, pct: tasks.length ? Math.round(done/tasks.length*100) : 0, blockersLeft, goLive: blockersLeft===0 };
+}
+
+function signal(e){ if (isRolled(e)) return "rolledout"; if (e.statusCategory==="Done") return "ready"; return "not-ready"; }
+const SIG_META = { ready:{label:"Ready to onboard", cls:"sig-ready", urg:100}, rolledout:{label:"Rolled out ✓", cls:"sig-rolledout", urg:10}, "not-ready":{label:"In development", cls:"sig-not-ready", urg:30} };
+function statusCls(cat){ return cat==="Done"?"s-done":cat==="In Progress"?"s-prog":"s-todo"; }
+function esc(s){ return (s==null?"":String(s)).replace(/[&<>"]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+function ptClass(pt){ return "pt-"+pt.replace(/\s+/g,""); }
+
+function inView(e){
+  if (isDeCommitted(e)) return view==="decommitted" || view==="all";
+  if (view==="decommitted") return false;
+  if (view==="all") return true;
+  if (view==="notrelevant") return isExcluded(e);
+  if (isExcluded(e)) return false;
+  if (view==="rolledout") return isRolled(e);
+  return !isRolled(e);
+}
+function passFilters(e){
+  const o = ov(e.key); const q = filters.search.trim().toLowerCase();
+  if (filters.status && e.statusCategory!==filters.status) return false;
+  if (filters.audience && (o.audience||"")!==filters.audience) return false;
+  if (filters.hidden && !o.aeAmHidden) return false;
+  if (filters.isNew && !e.isNew) return false;
+  if (filters.changed && !(e.prevStatus && e.prevStatus!==e.status)) return false;
+  if (q){
+    const hay = [e.key,e.summary,e.project,e.assignee,o.productOpsOwner,o.gtmOwner,pmOf(e),uxOf(e),domainOf(e),productTypeOf(e),topicOf(e),o.blurb,(o.comments||[]).map(c=>c.text).join(" "),(e.labels||[]).join(" "),(o.gtmLabels||[]).join(" ")].filter(Boolean).join(" ").toLowerCase();
+    if (!hay.includes(q)) return false;
+  }
+  return true;
+}
+function baseRows(){ return EPICS.filter(e => inView(e) && passFilters(e) && !(viewMode==="gtm" && isInternal(e) && !ov(e.key).forceGtm)); }
+function visibleRows(){
+  let rows = baseRows().filter(e => currentDomain==="All" || domainOf(e)===currentDomain);
+  rows.sort((a,b)=>{
+    let g;
+    if (groupBy==="topic"){ const ta=topicOf(a)||"~~~", tb=topicOf(b)||"~~~"; g=ta.toLowerCase().localeCompare(tb.toLowerCase()); }
+    else g = PRODUCT_TYPES.indexOf(productTypeOf(a)) - PRODUCT_TYPES.indexOf(productTypeOf(b));
+    if (g!==0) return g;
+    const u = SIG_META[signal(b)].urg - SIG_META[signal(a)].urg;
+    return u!==0?u:a.key.localeCompare(b.key);
+  });
+  return rows;
+}
+
+function renderTabs(){
+  const base = baseRows(); const counts = { All: base.length };
+  DOMAINS.forEach(d => counts[d]=0);
+  base.forEach(e => { const d = domainOf(e); counts[d]=(counts[d]||0)+1; });
+  document.getElementById("domTabs").innerHTML = ["All",...DOMAINS].map(d =>
+    `<button class="tab" data-dom="${d}" aria-pressed="${currentDomain===d}">${d}<span class="c">${counts[d]||0}</span></button>`).join("");
+  document.querySelectorAll("#domTabs .tab").forEach(t => t.onclick=()=>{ currentDomain=t.dataset.dom; render(); });
+}
+function renderTiles(){
+  const dom = EPICS.filter(e => currentDomain==="All" || domainOf(e)===currentDomain);
+  const s = { total:0, ready:0, rolled:0, noown:0, na:0 };
+  dom.forEach(e => {
+    const o = ov(e.key);
+    if (isDeCommitted(e)) return;
+    if (isExcluded(e)) { s.na++; return; }
+    s.total++;
+    if (isRolled(e)) s.rolled++; else if (signal(e)==="ready") s.ready++;
+    if (!isRolled(e) && !o.productOpsOwner && !o.gtmOwner) s.noown++;
+  });
+  const tiles = [
+    ["t-total", currentDomain==="All"?"Epics in play":currentDomain+" epics", s.total],
+    ["t-ready","Ready to onboard", s.ready], ["t-rolled","Rolled out", s.rolled],
+    ["t-noown","No ProductOps/GTM owner", s.noown], ["t-na","Not relevant", s.na],
+  ];
+  document.getElementById("tiles").innerHTML = tiles.map(([c,l,n])=>`<div class="tile ${c}"><div class="n">${n}</div><div class="l">${l}</div></div>`).join("");
+}
+function ownerSelect(f, val, people, key){
+  const opts = `<option value="">Assign…</option>`+people.map(p=>`<option ${val===p?"selected":""}>${esc(p)}</option>`).join("")+(val&&!people.includes(val)?`<option selected>${esc(val)}</option>`:"");
+  return `<select class="owner" data-f="${f}" data-key="${key}">${opts}</select>`;
+}
+
+function typeSelect(pt, key){
+  const opts = PRODUCT_TYPES.map(t=>`<option ${t===pt?"selected":""}>${esc(t)}</option>`).join("") + (PRODUCT_TYPES.includes(pt)?"":`<option selected>${esc(pt)}</option>`);
+  return `<select class="ptype-sel ${ptClass(pt)}" data-f="productType" data-key="${key}" style="min-width:118px;font-weight:600">${opts}</select>`;
+}
+function renderTable(){
+  const rows = visibleRows();
+  const cols = { tshirt: true, productOps: viewMode==="productops", gtmOwner: viewMode==="gtm", pm: true, ux: true };
+  const span = 9 + (cols.tshirt?1:0) + (cols.productOps?1:0) + (cols.gtmOwner?1:0) + (cols.pm?1:0) + (cols.ux?1:0);
+  const scope = currentDomain==="All" ? "" : ` in <b>${currentDomain}</b>`;
+  const viewLbl = view==="notrelevant"?"not relevant":view==="decommitted"?"de-committed":view;
+  document.getElementById("count").innerHTML = `Showing <b>${rows.length}</b> epic${rows.length===1?"":"s"}${scope} · grouped by ${groupBy==="topic"?"topic":"product type"} · <span style="text-transform:capitalize">${viewLbl}</span> view · <span title="When Jira data was last pulled">refreshed ${REFRESHED[activeQ]||"—"}</span> <span class="ctools">· <button id="collapseAll" class="linkbtn">Collapse all</button> · <button id="expandAll" class="linkbtn">Expand all</button></span>`;
+  const wrap = document.getElementById("tablewrap");
+  if (!rows.length){ wrap.innerHTML = `<div class="empty">No epics here. Try another domain tab or view.</div>`; return; }
+  const ptCounts = {}; rows.forEach(e=>{ const p=groupKeyOf(e); ptCounts[p]=(ptCounts[p]||0)+1; });
+  const head = `<thead><tr>
+    <th>Epic</th><th>Type</th><th>Audience</th><th>Jira status</th><th>Onboarding</th><th>Rollout</th>
+    ${cols.tshirt?"<th>T-shirt</th>":""}${cols.productOps?"<th>Product Ops</th>":""}${cols.gtmOwner?"<th>GTM owner</th>":""}${cols.pm?"<th>PM</th>":""}${cols.ux?"<th>UX lead</th>":""}
+    <th>Sign-off</th><th style="text-align:center">AE/AM</th><th></th>
+  </tr></thead>`;
+  let lastPt = null;
+  const body = rows.map(e => {
+    const o = ov(e.key); const sig = SIG_META[signal(e)]; const ex = isExcluded(e);
+    const pt = productTypeOf(e); const grp = groupKeyOf(e); const newGroup = grp!==lastPt; lastPt = grp;
+    const isc = collapsed.has(grp);
+    let hdr = "";
+    if (newGroup){
+      if (groupBy==="topic"){
+        const noTopic = grp===NO_TOPIC;
+        const cascade = noTopic ? "" : `<span class="cascade" data-nocollapse="1">
+          <span class="cascade-lbl">Set for all:</span>
+          <select data-cascade="productOpsOwner" data-topic="${esc(grp)}"><option value="">Prod Ops…</option>${PRODUCT_OPS.map(p=>`<option>${esc(p)}</option>`).join("")}</select>
+          <select data-cascade="gtmOwner" data-topic="${esc(grp)}"><option value="">GTM…</option>${GTM_PEOPLE.map(p=>`<option>${esc(p)}</option>`).join("")}</select>
+          <select data-cascade="tshirtSize" data-topic="${esc(grp)}"><option value="">Size…</option>${TSHIRTS.map(t=>`<option>${t}</option>`).join("")}</select>
+          <select data-cascade="audience" data-topic="${esc(grp)}"><option value="">Audience…</option><option>External</option><option>Internal</option></select>
+        </span>`;
+        hdr = `<tr class="grouphdr topichdr" data-collapse="${esc(grp)}"><td colspan="${span}"><div class="ghd"><span class="chev">${isc?'▸':'▾'}</span><span class="topicname" style="${noTopic?'color:var(--faint)':''}">${noTopic?'':'🔗 '}${esc(grp)}</span><span class="gcount">${ptCounts[grp]} epic${ptCounts[grp]===1?'':'s'}</span>${cascade}</div></td></tr>`;
+      } else {
+        hdr = `<tr class="grouphdr" data-collapse="${esc(grp)}"><td colspan="${span}"><div class="ghd"><span class="chev">${isc?'▸':'▾'}</span><span class="ptype ${ptClass(grp)}">${esc(grp)}</span><span class="gcount">${ptCounts[grp]} epic${ptCounts[grp]===1?'':'s'}</span></div></td></tr>`;
+      }
+    }
+    const hideAttr = isc ? 'style="display:none"' : '';
+    const internal = isInternal(e);
+    const aud = o.audience;
+    const audBadge = aud ? `<span class="aud ${aud==="Internal"?"aud-int":"aud-ext"}">${aud==="Internal" && (o.internalAudiences||[]).length ? "Int · "+esc((o.internalAudiences||[]).join(", ")) : aud}</span>` : "";
+    const labels = (e.labels||[]).slice(0,2).map(l=>`<span class="lbl">${esc(l)}</span>`).join("")+(o.gtmLabels||[]).map(l=>`<span class="lbl gtm">${esc(l)}</span>`).join("");
+    const tshirtOpts = `<option value="">—</option>`+TSHIRTS.map(t=>`<option ${o.tshirtSize===t?"selected":""}>${t}</option>`).join("");
+    const pr = progress(e);
+    const both = isRolled(e);
+    const tshirtCell = cols.tshirt ? `<td><select class="tshirt-${o.tshirtSize||''}" data-f="tshirtSize" data-key="${e.key}">${tshirtOpts}</select></td>` : "";
+    const poCell = cols.productOps ? `<td>${ownerSelect("productOpsOwner", o.productOpsOwner||"", PRODUCT_OPS, e.key)}</td>` : "";
+    const gtmCell = cols.gtmOwner ? `<td>${internal ? '<span class="na">N/A · internal</span>' : ownerSelect("gtmOwner", o.gtmOwner||"", GTM_PEOPLE, e.key)}</td>` : "";
+    const pmCell = cols.pm ? `<td>${ownerSelect("pm", pmOf(e), pmPeople(), e.key)}</td>` : "";
+    const uxCell = cols.ux ? `<td>${ownerSelect("uxLead", uxOf(e), UX_LEADS, e.key)}</td>` : "";
+    const gtmSignoff = internal ? "" : `<label><input type="checkbox" data-f="gtmDone" data-key="${e.key}" ${o.gtmDone?"checked":""}/> GTM</label>`;
+    const topic = topicOf(e);
+    return hdr + `<tr data-key="${e.key}" ${hideAttr} class="${ex?'excluded':''} ${e.isNew?'isnew':''} ${isDeCommitted(e)?'decommitted':''}">
+      <td style="min-width:230px;max-width:360px">
+        <a class="epic-key" href="${e.url}" target="_blank" rel="noreferrer">${e.key}</a>${e.isNew?`<span class="newbadge" title="New epic since last refresh">NEW</span>`:""}${isDeCommitted(e)?`<span class="decombadge" title="Dropped out of Commit this quarter">⚠ DE-COMMITTED</span>`:""}
+        <button class="epic-sum" data-open="${e.key}">${esc(e.summary)}</button>
+        ${o.blurb?`<div class="eblurb">${esc(o.blurb)}</div>`:""}
+        <div class="metarow"><span class="dom-tag">${esc(domainOf(e))}</span>${topic?`<span class="topic-tag" title="Topic">🔗 ${esc(topic)}</span>`:""}${audBadge}${labels}${(o.comments&&o.comments.length)?`<span class="cchip" title="${o.comments.length} comment${o.comments.length===1?'':'s'}">💬 ${o.comments.length}</span>`:""}</div>
+      </td>
+      <td>${typeSelect(pt, e.key)}</td>
+      <td><select data-f="audience" data-key="${e.key}" style="min-width:104px" class="${aud?(aud==='Internal'?'aud-sel-int':'aud-sel-ext'):''}">
+        <option value="">— set —</option>
+        <option ${aud==="External"?"selected":""}>External</option>
+        <option ${aud==="Internal"?"selected":""}>Internal</option>
+      </select></td>
+      <td><span class="pill ${statusCls(e.statusCategory)}"><span class="dot"></span>${esc(e.status)}</span>${e.prevStatus&&e.prevStatus!==e.status?`<div class="chgchip" title="Status changed since last refresh">⬆ was ${esc(e.prevStatus)}</div>`:""}${ex&&o.notRelevantAtStatus?`<div class="exstat" title="Jira status when marked not relevant">⊘ was “${esc(o.notRelevantAtStatus)}” when excluded</div>`:""}</td>
+      <td><span class="pill ${sig.cls}">${sig.label}</span></td>
+      <td style="min-width:130px">
+        <button class="progcell" data-rollout="${e.key}" title="Open rollout checklist">
+          <div class="progbar ${pr.blockersLeft>0?'blocked':''}"><span style="width:${pr.pct}%"></span></div>
+          <div class="progmeta"><span>${pr.done}/${pr.total}</span>${pr.goLive?`<span class="golive">● go-live ready</span>`:`<span class="blk">● ${pr.blockersLeft} blocker${pr.blockersLeft===1?"":"s"}</span>`}</div>
+        </button>
+      </td>
+      ${tshirtCell}${poCell}${gtmCell}${pmCell}${uxCell}
+      <td>
+        <div class="signoff-cell">
+          <label><input type="checkbox" data-f="productOpsDone" data-key="${e.key}" ${o.productOpsDone?"checked":""}/> Prod Ops</label>
+          ${gtmSignoff}
+          ${both?`<span class="doneflag">✓ Rolled out</span>`:""}
+        </div>
+      </td>
+      <td style="text-align:center"><button class="eye ${o.aeAmHidden?'':'on'}" data-eye="${e.key}" title="${o.aeAmHidden?'Hidden from AE/AM — click to show':'Visible to AE/AM — click to hide'}">${eyeSvg(!o.aeAmHidden)}</button></td>
+      <td style="text-align:center"><button class="exbtn ${ex?'on':''}" data-ex="${e.key}" title="${ex?'Marked not relevant — click to restore to rollout':'Mark not relevant for rollout'}">${ex?'<span style="font-size:11px;font-weight:700;white-space:nowrap">↩ Restore</span>':banSvg()}</button></td>
+    </tr>`;
+  }).join("");
+  wrap.innerHTML = `<table>${head}<tbody>${body}</tbody></table>`;
+  const ca=document.getElementById("collapseAll"), ea=document.getElementById("expandAll");
+  if(ca) ca.onclick=()=>{ Object.keys(ptCounts).forEach(p=>collapsed.add(p)); saveCollapsed(); renderTable(); };
+  if(ea) ea.onclick=()=>{ collapsed.clear(); saveCollapsed(); renderTable(); };
+}
+function eyeSvg(on){ return on
+  ? `<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>`
+  : `<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.9 4.24A9.1 9.1 0 0 1 12 4c6.5 0 10 7 10 7a13.2 13.2 0 0 1-1.67 2.68M6.06 6.06A13.4 13.4 0 0 0 2 12s3.5 7 10 7a9 9 0 0 0 4-.94"/><path d="m2 2 20 20"/></svg>`; }
+function banSvg(){ return `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="m5.6 5.6 12.8 12.8"/></svg>`; }
+
+function bindTableEvents(){
+  const wrap = document.getElementById("tablewrap");
+  wrap.addEventListener("change", e=>{
+    const el=e.target;
+    if (el.dataset.cascade){ const topic=el.dataset.topic, field=el.dataset.cascade, val=el.value; if(val){ EPICS.forEach(ep=>{ if(topicOf(ep)===topic) setOv(ep.key,{[field]:val}); }); } el.value=""; render(); if(selectedKey) renderDrawer(); return; }
+    const key=el.dataset.key, f=el.dataset.f; if(!key||!f) return;
+    setOv(key, { [f]: el.type==="checkbox"?el.checked:el.value });
+    if (f==="tshirtSize"){ el.className="tshirt-"+(el.value||""); renderTiles(); return; }
+    render(); if(selectedKey===key) renderDrawer();
+  });
+  wrap.addEventListener("click", e=>{
+    if (e.target.closest("[data-nocollapse]")) return;
+    const gc=e.target.closest("[data-collapse]"); if(gc){ const pt=gc.dataset.collapse; collapsed.has(pt)?collapsed.delete(pt):collapsed.add(pt); saveCollapsed(); renderTable(); return; }
+    const r=e.target.closest("[data-rollout]"); if(r){ openRollout(r.dataset.rollout); return; }
+    const op=e.target.closest("[data-open]"); if(op){ openDrawer(op.dataset.open); return; }
+    const ey=e.target.closest("[data-eye]"); if(ey){ const k=ey.dataset.eye; setOv(k,{aeAmHidden:!ov(k).aeAmHidden}); render(); if(selectedKey===k) renderDrawer(); return; }
+    const ex=e.target.closest("[data-ex]"); if(ex){ const k=ex.dataset.ex; toggleExclude(k, !ov(k).notRelevantForRollout); render(); if(selectedKey===k) renderDrawer(); return; }
+  });
+}
+
+/* ---------- Rollout page ---------- */
+function openRollout(key){ rolloutKey=key; renderRollout(); document.body.classList.add("rollout"); window.scrollTo(0,0); }
+function closeRollout(){ rolloutKey=null; document.body.classList.remove("rollout"); render(); }
+function renderRollout(){
+  const e = EPICS.find(x=>x.key===rolloutKey); if(!e) return;
+  const o = ov(e.key); const internal = isInternal(e); const pr = progress(e); const st = o.tasks||{};
+  const phaseBlocks = PHASES.map(ph=>{
+    const tasks = applicableTasks(e).filter(t=>t.ph===ph.n);
+    if (!tasks.length) return "";
+    const done = tasks.filter(t=>st[t.id]?.done).length;
+    const rows = tasks.map(t=>{
+      const ts = st[t.id]||{};
+      return `<div class="task ${ts.done?'done':''}">
+        <input type="checkbox" class="tk" data-tk="${t.id}" ${ts.done?"checked":""} aria-label="Done"/>
+        <div>
+          <div class="ttl">${esc(t.title)}</div>
+          <div class="tmeta"><span class="teamchip">${esc(t.team)}</span>${t.blocker?`<span class="blkbadge">GO-LIVE BLOCKER</span>`:""}${t.gtm?`<span class="teamchip">GTM</span>`:""}</div>
+        </div>
+        <div class="tright"><input class="towner" data-to="${t.id}" value="${esc(ts.owner||"")}" placeholder="Owner…" /></div>
+      </div>`;
+    }).join("");
+    return `<div class="phase">
+      <div class="phase-h"><span class="phase-n">${ph.n}</span><h3>${esc(ph.name)}</h3><span class="pc">${done}/${tasks.length}</span></div>
+      <div class="tasklist">${rows}</div>
+    </div>`;
+  }).join("");
+  document.getElementById("rolloutPage").innerHTML = `
+    <div class="rp-back"><button class="btn" id="rpBack">← Back to list</button></div>
+    <div class="rp-head">
+      <div class="rp-meta">
+        <a class="epic-key" href="${e.url}" target="_blank" rel="noreferrer">${e.key} ↗</a>
+        <span class="ptype ${ptClass(productTypeOf(e))}">${esc(productTypeOf(e))}</span>
+        <span class="pill ${statusCls(e.statusCategory)}"><span class="dot"></span>${esc(e.status)}</span>
+        ${o.audience?`<span class="aud ${o.audience==="Internal"?"aud-int":"aud-ext"}">${esc(o.audience)}</span>`:""}
+      </div>
+      <h2>${esc(e.summary)}</h2>
+      <div class="rp-progwrap">
+        <div>
+          <div class="rp-progline"><span>Rollout progress</span><span><b>${pr.done}</b> / ${pr.total} tasks · <b>${pr.pct}%</b></span></div>
+          <div class="rp-bigbar"><span style="width:${pr.pct}%"></span></div>
+        </div>
+        <div class="rp-golive ${pr.goLive?'ok':'no'}">
+          ${pr.goLive ? `✓ Go-live blockers cleared — this feature can go live.` : `⛔ ${pr.blockersLeft} go-live blocker${pr.blockersLeft===1?"":"s"} remaining — cannot go live yet.`}
+        </div>
+        ${internal?`<div class="na">Internal audience — GTM / marketing tasks are hidden for this feature.</div>`:""}
+      </div>
+    </div>
+    ${phaseBlocks}
+    <div style="height:30px"></div>`;
+  document.getElementById("rpBack").onclick = closeRollout;
+  const page = document.getElementById("rolloutPage");
+  page.querySelectorAll("[data-tk]").forEach(el=>el.addEventListener("change",()=>{ setTask(rolloutKey, el.dataset.tk, {done:el.checked}); renderRollout(); }));
+  page.querySelectorAll("[data-to]").forEach(el=>el.addEventListener("input",()=>setTask(rolloutKey, el.dataset.to, {owner:el.value})));
+}
+
+/* ---------- Drawer ---------- */
+function openDrawer(key){ selectedKey=key; renderDrawer(); document.getElementById("scrim").classList.add("open"); document.getElementById("drawer").classList.add("open"); document.getElementById("drawer").setAttribute("aria-hidden","false"); }
+function closeDrawer(){ selectedKey=null; document.getElementById("scrim").classList.remove("open"); document.getElementById("drawer").classList.remove("open"); document.getElementById("drawer").setAttribute("aria-hidden","true"); }
+function renderDrawer(){
+  const e = EPICS.find(x=>x.key===selectedKey); if(!e) return;
+  const dl=document.getElementById("topicList"); if(dl) dl.innerHTML = allTopics().map(t=>`<option value="${esc(t)}"></option>`).join("");
+  const o = ov(e.key); const sig = SIG_META[signal(e)]; const internal = isInternal(e); const both = isRolled(e); const pr = progress(e);
+  const sel = (arr,val,ph)=>`<option value="">${ph}</option>`+arr.map(t=>`<option ${val===t?"selected":""}>${esc(t)}</option>`).join("")+(val&&!arr.includes(val)?`<option selected>${esc(val)}</option>`:"");
+  const iaChips = INTERNAL_AUDIENCES.map(a=>`<label><input type="checkbox" class="ia" data-ia="${a}" ${(o.internalAudiences||[]).includes(a)?"checked":""}/> ${a}</label>`).join("");
+  document.getElementById("drawer").innerHTML = `
+    <div class="drawer-head">
+      <div>
+        <div style="display:flex;gap:7px;align-items:center;flex-wrap:wrap">
+          <a class="epic-key" href="${e.url}" target="_blank" rel="noreferrer">${e.key} ↗</a>
+          <span class="pill ${statusCls(e.statusCategory)}"><span class="dot"></span>${esc(e.status)}</span>
+          <span class="pill ${sig.cls}">${sig.label}</span>
+        </div>
+        <h2>${esc(e.summary)}</h2>
+        ${o.blurb?`<div class="eblurb" style="margin-top:6px">${esc(o.blurb)}</div>`:""}
+      </div>
+      <button class="close" id="closeBtn" aria-label="Close">×</button>
+    </div>
+    <div class="drawer-body">
+      <div class="facts">
+        <div><div class="k">Project</div><div class="v">${esc(e.project)||"—"}</div></div>
+        <div><div class="k">Priority</div><div class="v">${esc(e.priority&&e.priority!=="None"?e.priority:"—")}</div></div>
+        <div><div class="k">Product Manager (Jira)</div><div class="v">${esc(e.pmJira||"—")}</div></div>
+        <div><div class="k">Dev assignee (Jira)</div><div class="v">${esc(e.assignee||"—")}</div></div>
+        <div><div class="k">Jira status</div><div class="v">${esc(e.status)}</div></div>
+      </div>
+      <button class="btn primary" id="openRolloutBtn" style="justify-content:center">Open rollout checklist · ${pr.pct}% (${pr.done}/${pr.total})${pr.goLive?" · ✓ go-live ready":` · ${pr.blockersLeft} blocker${pr.blockersLeft===1?"":"s"}`}</button>
+      <div class="divider"></div>
+      <div class="sect-label">GTM / Product Ops overlay</div>
+      <div class="field"><label>One-line explanation (for GTM / AE / AM)</label><textarea data-df="blurb" placeholder="Explain this epic in one plain sentence…">${esc(o.blurb||'')}</textarea></div>
+      <div class="field"><label>Topic (group related epics — shared GTM / Product Ops)</label><input list="topicList" data-df="topic" value="${esc(o.topic||'')}" placeholder="e.g. Payroll Engine, Banco Cards…" /></div>
+      <div class="grid2">
+        <div class="field"><label>Domain</label><select data-df="domain">${sel(DOMAINS, o.domain||"", "Auto — "+autoDomain(e))}</select></div>
+        <div class="field"><label>Product type</label><select data-df="productType">${sel(PRODUCT_TYPES, o.productType||"", "Auto — "+autoProductType(e))}</select></div>
+        <div class="field"><label>Audience</label><select data-df="audience">${sel(["External","Internal"], o.audience||"", "Set audience…")}</select></div>
+        <div class="field"><label>T-shirt size</label><select data-df="tshirtSize">${sel(TSHIRTS,o.tshirtSize,"—")}</select></div>
+      </div>
+      ${internal?`<div class="field"><label>Internal audience</label><div class="iachips">${iaChips}</div></div>`:""}
+      <div class="grid2">
+        <div class="field"><label>Product Ops owner</label><select data-df="productOpsOwner">${sel(PRODUCT_OPS,o.productOpsOwner,"Assign…")}</select></div>
+        ${internal?"":`<div class="field"><label>GTM owner</label><select data-df="gtmOwner">${sel(GTM_PEOPLE,o.gtmOwner,"Assign…")}</select></div>`}
+      </div>
+      <div class="grid2">
+        <div class="field"><label>Assigned PM</label><select data-df="pm">${sel(pmPeople(), pmOf(e), "Assign…")}</select></div>
+        <div class="field"><label>UX design lead</label><select data-df="uxLead">${sel(UX_LEADS, uxOf(e), "Assign…")}</select></div>
+      </div>
+      ${internal?`<label class="switch"><input type="checkbox" data-df="forceGtm" ${o.forceGtm?"checked":""}/> Show on GTM list (override — internal epics are hidden from GTM by default)</label>`:""}
+      <div class="signoff">
+        <div class="sect-label">Rollout sign-off</div>
+        <label class="switch"><input type="checkbox" data-df="productOpsDone" ${o.productOpsDone?"checked":""}/> Product Ops rollout done</label>
+        ${internal?`<div class="na">GTM not required for internal features.</div>`:`<label class="switch"><input type="checkbox" data-df="gtmDone" ${o.gtmDone?"checked":""}/> GTM rollout done</label>`}
+        ${both?`<div class="rolled-banner">✓ Rolled out — complete from ${internal?"Product Ops":"both sides"}</div>`:""}
+      </div>
+      <div class="field"><label>GTM labels (comma-separated)</label><input data-df="gtmLabels" value="${esc((o.gtmLabels||[]).join(', '))}" placeholder="e.g. banco, self-serve, emea" /></div>
+      <label class="switch"><input type="checkbox" data-df="aeAmHidden" ${o.aeAmHidden?"checked":""}/> Hide from AE / AM <span class="na" style="font-style:normal">(shown to all by default)</span></label>
+      <label class="switch warn"><input type="checkbox" data-df="notRelevantForRollout" ${o.notRelevantForRollout?"checked":""}/> Not relevant for rollout (hide)</label>
+      <div class="field"><label>AE / AM notes</label><textarea data-df="aeAmNotes" placeholder="What AEs/AMs should know…">${esc(o.aeAmNotes||'')}</textarea></div>
+      <div class="field"><label>Internal notes</label><textarea data-df="notes" placeholder="Product Ops / GTM working notes…">${esc(o.notes||'')}</textarea></div>
+      <div class="divider"></div>
+      <div class="sect-label">Comments ${(o.comments||[]).length?`· ${o.comments.length}`:""}</div>
+      <div class="commentlog">${(o.comments||[]).length ? (o.comments||[]).map(c=>`<div class="cmt"><div class="cmt-meta">${c.by?esc(c.by)+" · ":""}${new Date(c.at).toLocaleString()}</div><div class="cmt-text">${esc(c.text)}</div></div>`).join("") : '<div class="na">No comments yet.</div>'}</div>
+      <div class="cmt-add"><textarea id="cmtInput" placeholder="Add a comment…"></textarea><button class="btn primary" id="cmtAdd" type="button">Add comment</button></div>
+      ${o.updatedAt?`<div class="updated">Overlay saved locally ${new Date(o.updatedAt).toLocaleString()}</div>`:""}
+    </div>`;
+  document.getElementById("closeBtn").onclick = closeDrawer;
+  document.getElementById("openRolloutBtn").onclick = ()=>{ closeDrawer(); openRollout(e.key); };
+  const cmtAdd = document.getElementById("cmtAdd");
+  if (cmtAdd) cmtAdd.onclick = ()=>{ const inp=document.getElementById("cmtInput"); const v=inp.value; if(!v.trim()) return; addComment(selectedKey, v); inp.value=""; renderDrawer(); renderTable(); };
+  const d = document.getElementById("drawer");
+  d.querySelectorAll("[data-df]").forEach(el=>{
+    const f = el.dataset.df;
+    const handler = ()=>{
+      let val; if (el.type==="checkbox") val=el.checked; else if (f==="gtmLabels") val=el.value.split(",").map(s=>s.trim()).filter(Boolean); else val=el.value;
+      if (f==="notRelevantForRollout"){ toggleExclude(selectedKey, val); }
+      else setOv(selectedKey, { [f]: val });
+      if (f==="audience") renderDrawer();
+      renderTabs(); renderTiles(); renderTable();
+    };
+    el.addEventListener("change", handler);
+  });
+  d.querySelectorAll(".ia").forEach(el=>el.addEventListener("change",()=>{
+    const set = new Set(ov(selectedKey).internalAudiences||[]);
+    el.checked ? set.add(el.dataset.ia) : set.delete(el.dataset.ia);
+    setOv(selectedKey, { internalAudiences:[...set] }); renderTable();
+  }));
+}
+
+function render(){
+  document.body.setAttribute("data-view", viewMode);
+  renderViewToggle();
+  if (viewMode==="progress"){ renderProgress(); return; }
+  renderManualCard(); renderDecommitAlert(); renderTabs(); renderTiles(); renderTable();
+}
+function renderViewToggle(){ document.querySelectorAll("#viewmode button").forEach(b=>b.setAttribute("aria-pressed", b.dataset.vm===viewMode)); }
+
+function renderDecommitAlert(){
+  const el=document.getElementById("decommitAlert"); if(!el) return;
+  const list=EPICS.filter(e=>isDeCommitted(e));
+  if(!list.length){ el.innerHTML=""; el.style.display="none"; return; }
+  el.style.display="";
+  el.innerHTML=`<div class="decomalert"><span>⚠</span><span><b>${list.length} epic${list.length===1?"":"s"}</b> dropped out of <b>Commit</b> this quarter (${list.slice(0,5).map(e=>esc(e.key)).join(", ")}${list.length>5?"…":""}) — priorities moved. Review before continuing their rollout.</span><button id="viewDecom" type="button">Review de-committed →</button></div>`;
+  const b=el.querySelector("#viewDecom"); if(b) b.onclick=()=>{ view="decommitted"; document.querySelectorAll("#viewseg button").forEach(x=>x.setAttribute("aria-pressed", x.dataset.v==="decommitted")); render(); };
+}
+
+/* ---------- Progress dashboard ---------- */
+function donutSvg(segs, topLabel, botLabel){
+  const total = segs.reduce((a,s)=>a+s.value,0);
+  const R=52, C=2*Math.PI*R; let off=0;
+  const arcs = total ? segs.filter(s=>s.value>0).map(s=>{
+    const len=s.value/total*C;
+    const el=`<circle cx="66" cy="66" r="${R}" fill="none" stroke="${s.color}" stroke-width="18" stroke-dasharray="${len.toFixed(2)} ${(C-len).toFixed(2)}" stroke-dashoffset="${(-off).toFixed(2)}" transform="rotate(-90 66 66)"/>`;
+    off+=len; return el;
+  }).join("") : "";
+  return `<svg viewBox="0 0 132 132" width="118" height="118" role="img" aria-label="${esc(topLabel)} ${esc(botLabel)}">
+    <circle cx="66" cy="66" r="${R}" fill="none" stroke="var(--neutral-bg)" stroke-width="18"/>
+    ${arcs}
+    <text x="66" y="62" text-anchor="middle" class="donut-top">${esc(topLabel)}</text>
+    <text x="66" y="80" text-anchor="middle" class="donut-bot">${esc(botLabel)}</text>
+  </svg>`;
+}
+function legendHtml(segs){ return `<div class="legend">`+segs.map(s=>`<div class="lg"><span class="sw" style="background:${s.color}"></span>${esc(s.label)}<span class="lgval">${s.value}</span></div>`).join("")+`</div>`; }
+function donutCard(title, sub, segs, centerTop, centerBot){
+  return `<div class="dcard"><h3>${esc(title)}</h3><div class="dsub">${esc(sub)}</div><div class="donutwrap">${donutSvg(segs, centerTop, centerBot)}${legendHtml(segs)}</div></div>`;
+}
+function renderProgress(){
+  const page=document.getElementById("progressPage"); if(!page) return;
+  const all = EPICS.slice();
+  const inPlay = all.filter(e=>!isExcluded(e)&&!isDeCommitted(e));
+  const excluded = all.filter(e=>isExcluded(e)).length;
+  const decom = all.filter(e=>isDeCommitted(e)).length;
+  let rolled=0, ready=0, dev=0;
+  inPlay.forEach(e=>{ const s=signal(e); if(s==="rolledout")rolled++; else if(s==="ready")ready++; else dev++; });
+  let done=0,prog=0,todo=0;
+  inPlay.forEach(e=>{ const c=e.statusCategory; if(c==="Done")done++; else if(c==="In Progress")prog++; else todo++; });
+  let gl=0,blk=0; inPlay.forEach(e=>{ if(progress(e).goLive)gl++; else blk++; });
+  let td=0,tt=0; inPlay.forEach(e=>{ const pr=progress(e); td+=pr.done; tt+=pr.total; });
+  const taskPct = tt?Math.round(td/tt*100):0;
+  const noown = inPlay.filter(e=>{const o=ov(e.key); return !isRolled(e)&&!o.productOpsOwner&&!o.gtmOwner;}).length;
+  const C_rolled="var(--live-ink)", C_ready="var(--ready-ink)", C_dev="var(--prog-ink)", C_todo="var(--neutral-ink)", C_blk="var(--blocked-ink)";
+  const rolloutSegs=[{label:"Rolled out",value:rolled,color:C_rolled},{label:"Ready to onboard",value:ready,color:C_ready},{label:"In development",value:dev,color:C_dev}];
+  const rndSegs=[{label:"Done",value:done,color:C_rolled},{label:"In progress",value:prog,color:C_dev},{label:"To do",value:todo,color:C_todo}];
+  const glSegs=[{label:"Go-live ready",value:gl,color:C_rolled},{label:"Blockers remaining",value:blk,color:C_blk}];
+  const taskSegs=[{label:"Tasks done",value:td,color:C_rolled},{label:"Tasks remaining",value:tt-td,color:C_todo}];
+  const typeStats={}; inPlay.forEach(e=>{ const t=productTypeOf(e); (typeStats[t]=typeStats[t]||{n:0,pct:0,rolled:0}); typeStats[t].n++; typeStats[t].pct+=progress(e).pct; if(signal(e)==="rolledout")typeStats[t].rolled++; });
+  const typeBars = Object.keys(typeStats).sort((a,b)=>PRODUCT_TYPES.indexOf(a)-PRODUCT_TYPES.indexOf(b)).map(t=>{
+    const st=typeStats[t]; const avg=Math.round(st.pct/st.n);
+    return `<div class="tb"><div class="tb-head"><b>${esc(t)}</b><span>${st.rolled}/${st.n} rolled out · ${avg}% avg rollout</span></div><div class="tb-bar"><span style="width:${avg}%"></span></div></div>`;
+  }).join("");
+  const scope = `Q${activeQ} 2026 · ${inPlay.length} epics in play · refreshed ${REFRESHED[activeQ]||"—"}`;
+  page.innerHTML = `
+    <h2 style="font-size:16px">Quarter progress — rollout & R&D readiness</h2>
+    <div class="dash-note">${esc(scope)}${decom?` · ⚠ ${decom} de-committed`:""}${excluded?` · ${excluded} not relevant`:""}</div>
+    <div class="dstat-row">
+      <div class="tile t-total"><div class="n">${inPlay.length}</div><div class="l">Epics in play</div></div>
+      <div class="tile t-rolled"><div class="n">${rolled}</div><div class="l">Rolled out</div></div>
+      <div class="tile t-ready"><div class="n">${ready}</div><div class="l">Ready to onboard</div></div>
+      <div class="tile t-noown"><div class="n">${noown}</div><div class="l">No owner</div></div>
+      <div class="tile t-na"><div class="n">${taskPct}%</div><div class="l">Rollout tasks done</div></div>
+    </div>
+    <div class="dash-grid">
+      ${donutCard("Rollout readiness","Where epics stand in the onboarding pipeline", rolloutSegs, String(rolled), "rolled out")}
+      ${donutCard("R&D status (Jira)","Build progress from Jira status category", rndSegs, String(done), "done")}
+      ${donutCard("Go-live readiness","Blockers cleared vs remaining", glSegs, String(gl), "ready")}
+      ${donutCard("Rollout task completion","All rollout checklist tasks across epics", taskSegs, taskPct+"%", "complete")}
+    </div>
+    <div class="dcard" style="margin-top:14px"><h3>Rollout by product type</h3><div class="dsub">Average rollout completion and count rolled out, per product type</div><div class="typebars">${typeBars||'<div class="na">No epics.</div>'}</div></div>`;
+}
+
+function renderManualCard(){
+  const el = document.getElementById("manualCard");
+  const team = viewMode; // "gtm" or "productops"
+  const people = team==="gtm" ? GTM_PEOPLE : PRODUCT_OPS;
+  const ownerField = team==="gtm" ? "gtmOwner" : "opsOwner";
+  const ownerLabel = team==="gtm" ? "GTM owner" : "Product Ops owner";
+  const title = team==="gtm" ? "GTM initiatives" : "Product Ops initiatives";
+  const list = manuals.filter(m=>m.q===activeQ && (m.team||"gtm")===team);
+  const rows = list.map(m=>`<div class="mrow" data-id="${m.id}">
+    <input data-mf="name" value="${esc(m.name||'')}" placeholder="Initiative name"/>
+    <select data-mf="status">${MANUAL_STATUSES.map(s=>`<option ${m.status===s?"selected":""}>${s}</option>`).join("")}</select>
+    <select data-mf="${ownerField}"><option value="">${ownerLabel}…</option>${people.map(p=>`<option ${m[ownerField]===p?"selected":""}>${esc(p)}</option>`).join("")}</select>
+    <input data-mf="goLive" type="date" value="${esc(m.goLive||'')}" title="Expected go-live date"/>
+    <input data-mf="notes" value="${esc(m.notes||'')}" placeholder="Notes"/>
+    <button class="del" data-mdel="${m.id}" title="Delete">✕</button>
+  </div>`).join("");
+  el.innerHTML = `<div class="mcard">
+    <h3>${title} <span class="gcount">(non-dev · ${list.length})</span></h3>
+    <div class="sub">Manually-tracked ${team==="gtm"?"GTM":"Product Ops"} work that isn't a Jira epic — scoped to Product_Q${activeQ}26. Columns: name · status · owner · expected go-live · notes.</div>
+    ${list.length?rows:`<div class="mempty">No manual initiatives yet — add one below.</div>`}
+    <div style="margin-top:12px"><button class="btn primary" id="addManual" type="button">+ Add initiative</button></div>
+  </div>`;
+  el.querySelector("#addManual").onclick = ()=>{ const m={id:"m"+Date.now()+Math.random().toString(36).slice(2,6), q:activeQ, team, name:"", status:"Planned", [ownerField]:"", goLive:"", notes:""}; manuals.push(m); persistManual(m); renderManualCard(); };
+  el.querySelectorAll(".mrow").forEach(r=>{
+    const id=r.dataset.id;
+    r.querySelectorAll("[data-mf]").forEach(inp=>{
+      const f=inp.dataset.mf;
+      inp.addEventListener("change", ()=>{ const m=manuals.find(x=>x.id===id); if(m){ m[f]=inp.value; persistManual(m); } });
+    });
+    r.querySelector("[data-mdel]").onclick=()=>{ manuals=manuals.filter(x=>x.id!==id); removeManualDoc(id); renderManualCard(); };
+  });
+}
+
+function migrateType(oldN, newN){
+  Object.keys(overlays).forEach(k=>{ if(overlays[k] && overlays[k].productType===oldN){ setOv(k,{productType:newN}); } });
+  Object.values(DATASETS).flat().forEach(e=>{ const cur=overlays[e.key]&&overlays[e.key].productType; if(!cur && autoProductType(e)===oldN){ setOv(e.key,{productType:newN}); } });
+}
+function openTypeModal(){
+  const el=document.getElementById("typeModal"); el.hidden=false;
+  const rows=PRODUCT_TYPES.map((t,i)=>`<div class="trow"><input data-ti="${i}" value="${esc(t)}"/><button class="del" data-tdel="${i}" title="Remove">✕</button></div>`).join("");
+  el.innerHTML=`<div class="modalbox">
+    <h3>Manage product types</h3>
+    <div class="sub" style="font-size:12px;color:var(--muted);margin-bottom:10px">Rename, remove, or add a product type. Epics using a changed type are migrated automatically.</div>
+    ${rows}
+    <div class="trow"><input id="newType" placeholder="New type name…"/><button class="btn" id="addType" type="button">Add</button></div>
+    <div class="modal-actions"><button class="btn primary" id="closeTypes" type="button">Done</button></div>
+  </div>`;
+  el.querySelector("#closeTypes").onclick=()=>{ el.hidden=true; };
+  el.onclick=(ev)=>{ if(ev.target===el) el.hidden=true; };
+  el.querySelector("#addType").onclick=()=>{ const inp=el.querySelector("#newType"); const v=inp.value.trim(); if(v && !PRODUCT_TYPES.includes(v)){ PRODUCT_TYPES.splice(Math.max(0,PRODUCT_TYPES.length-1),0,v); saveTypes(); render(); openTypeModal(); } };
+  el.querySelectorAll("[data-ti]").forEach(inp=>{
+    inp.addEventListener("change", ()=>{ const i=+inp.dataset.ti; const oldN=PRODUCT_TYPES[i]; const nv=inp.value.trim(); if(!nv||nv===oldN||PRODUCT_TYPES.includes(nv)){ inp.value=oldN; return; } PRODUCT_TYPES[i]=nv; migrateType(oldN,nv); saveTypes(); render(); openTypeModal(); });
+  });
+  el.querySelectorAll("[data-tdel]").forEach(btn=>{
+    btn.onclick=()=>{ if(PRODUCT_TYPES.length<=1) return; const i=+btn.dataset.tdel; const removed=PRODUCT_TYPES[i]; PRODUCT_TYPES.splice(i,1); const fallback=PRODUCT_TYPES.includes("Other")?"Other":PRODUCT_TYPES[PRODUCT_TYPES.length-1]; migrateType(removed,fallback); saveTypes(); render(); openTypeModal(); };
+  });
+}
+
+document.getElementById("search").addEventListener("input", e=>{ filters.search=e.target.value; renderTabs(); renderTable(); });
+document.getElementById("fStatus").addEventListener("change", e=>{ filters.status=e.target.value; render(); });
+document.getElementById("fAudience").addEventListener("change", e=>{ filters.audience=e.target.value; render(); });
+document.getElementById("fHidden").addEventListener("change", e=>{ filters.hidden=e.target.checked; render(); });
+document.getElementById("fNew").addEventListener("change", e=>{ filters.isNew=e.target.checked; render(); });
+document.getElementById("fChanged").addEventListener("change", e=>{ filters.changed=e.target.checked; render(); });
+(function(){ const g=document.getElementById("groupBy"); if(g){ g.value=groupBy; if(groupBy==="topic") collapsed.add(NO_TOPIC); g.addEventListener("change", e=>{ groupBy=e.target.value; saveGroupBy(); if(groupBy==="topic") collapsed.add(NO_TOPIC); render(); }); } })();
+document.getElementById("viewseg").addEventListener("click", e=>{ const b=e.target.closest("button"); if(!b) return; view=b.dataset.v; document.querySelectorAll("#viewseg button").forEach(x=>x.setAttribute("aria-pressed", x===b)); render(); });
+document.getElementById("scrim").addEventListener("click", closeDrawer);
+document.addEventListener("keydown", e=>{ if(e.key==="Escape"){ if(rolloutKey) closeRollout(); else closeDrawer(); } });
+document.getElementById("qseg").addEventListener("click", async e=>{
+  const b=e.target.closest("button"); if(!b) return;
+  document.querySelectorAll("#qseg button").forEach(x=>x.setAttribute("aria-pressed", x===b));
+  const q=b.dataset.q; activeQ=q; document.getElementById("labelChip").textContent=`Product_Q${q}26`;
+  if(rolloutKey) closeRollout();
+  if(!DATASETS[q]){ try { await fetchQuarter(q); } catch {} }
+  const data=DATASETS[q], hasData=!!(data && data.length);
+  ["domTabs","tiles","tablewrap","count"].forEach(id=>{ const el=document.getElementById(id); if(el) el.style.display=hasData?"":"none"; });
+  const bar=document.querySelector(".barrow"); if(bar) bar.style.display=hasData?"":"none";
+  let note=document.getElementById("qnote");
+  if(hasData){ EPICS=data; collapsed=loadCollapsed(); if(note) note.style.display="none"; render(); }
+  else { if(!note){ note=document.createElement("div"); note.id="qnote"; note.className="empty"; note.style.cssText="background:var(--surface);border:1px dashed var(--border-strong);border-radius:12px;margin-top:14px"; document.getElementById("tablewrap").after(note); } note.innerHTML=`No committed epics found for <span style="font-family:var(--mono)">Product_Q${q}26</span>.`; note.style.display=""; }
+});
+document.getElementById("themeBtn").addEventListener("click", ()=>{ const r=document.documentElement, cur=r.getAttribute("data-theme"); const dark=cur?cur==="dark":matchMedia("(prefers-color-scheme: dark)").matches; r.setAttribute("data-theme", dark?"light":"dark"); });
+document.getElementById("viewmode").addEventListener("click", e=>{ const b=e.target.closest("button"); if(!b) return; viewMode=b.dataset.vm; saveViewMode(); if(rolloutKey) closeRollout(); render(); });
+document.getElementById("manageTypes").addEventListener("click", openTypeModal);
+
+function showSync(){
+  const el=document.getElementById("syncStatus"); if(!el) return;
+  if(online){ el.textContent="✓ Shared"; el.title="Saved to the server — synced for everyone with access."; el.className="syncchip ok"; }
+  else { el.textContent="⚠ Offline"; el.title="Can't reach the server right now — changes may not be saved."; el.className="syncchip warn"; }
+}
+function apiGet(path){ return fetch(API+path).then(r=>{ if(!r.ok) throw new Error("HTTP "+r.status); return r.json(); }); }
+function apiPut(path, body){ return fetch(API+path, {method:"PUT", headers:{"Content-Type":"application/json"}, body:JSON.stringify(body)}).then(r=>{ if(!r.ok) throw new Error("HTTP "+r.status); if(!online){ online=true; showSync(); } return r.json(); }).catch(()=>{ online=false; showSync(); }); }
+function normUx(v){ if(!v) return ""; const str=String(v).trim(); for(const n of UX_LEADS){ if(n.toLowerCase()===str.toLowerCase()) return n; } const tok=str.split(/\s+/)[0].toLowerCase().replace(/\.$/,""); const hit=UX_LEADS.find(n=>n.split(" ")[0].toLowerCase()===tok); return hit||str; }
+function mapEpic(e){ return { key:e.key, summary:e.summary, project:e.project, status:e.status, statusCategory:e.statusCategory, assignee:e.assignee||null, priority:e.priority||"None", commitment:e.commitment||null, labels:Array.isArray(e.labels)?e.labels:[], url:e.url, pmJira:e.productManager||null, uxJira:normUx(e.uxDesignLead), prevStatus:e.prevStatus, isNew:e.isNew, deCommitted:e.deCommitted, deCommittedAt:e.deCommittedAt }; }
+async function fetchQuarter(q){ const data=await apiGet(`/api/epics?quarter=${q}&year=2026`); DATASETS[q]=(data.epics||[]).map(mapEpic); return DATASETS[q]; }
+async function refreshShared(){
+  try {
+    const [ov, meta] = await Promise.all([apiGet("/api/overlay"), apiGet("/api/meta")]);
+    Object.keys(pendingWrites).forEach(k=>{ if(overlays[k]) ov[k]=overlays[k]; });
+    overlays=ov;
+    if(meta){ manuals=Array.isArray(meta.manuals)?meta.manuals:manuals; if(Array.isArray(meta.productTypes)&&meta.productTypes.length) PRODUCT_TYPES=meta.productTypes; }
+    online=true; showSync(); render(); if(selectedKey) renderDrawer(); if(rolloutKey) renderRollout();
+  } catch { online=false; showSync(); }
+}
+async function boot(){
+  try {
+    const meta = await apiGet("/api/meta");
+    if(meta){ manuals=Array.isArray(meta.manuals)?meta.manuals:[]; if(Array.isArray(meta.productTypes)&&meta.productTypes.length) PRODUCT_TYPES=meta.productTypes; }
+    overlays = await apiGet("/api/overlay");
+    await fetchQuarter("4");
+    EPICS = DATASETS["4"] || [];
+    online = true;
+  } catch(err){ online=false; }
+  showSync(); render();
+  setInterval(refreshShared, 30000);
+}
+bindTableEvents();
+showSync();
+boot();
+</script>
